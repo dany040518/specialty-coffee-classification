@@ -1,0 +1,40 @@
+# Configuración central del proyecto.
+# Todas las rutas son RELATIVAS a la raíz del repositorio (nunca rutas absolutas tipo C:/Users/...).
+# Los notebooks y los módulos de src/ deben leer sus parámetros de aquí, no hardcodearlos.
+
+project:
+  name: "Clasificación de café de especialidad (CQI)"
+  random_seed: 42   # semilla única para todo split / validación cruzada / modelo que se implemente (fases 03-06)
+
+paths:
+  data:
+    raw_dir: "data/raw"
+    interim_dir: "data/interim"
+    processed_dir: "data/processed"
+    external_dir: "data/external"
+    arabica_raw: "data/raw/arabica_data_cleaned.csv"
+    robusta_raw: "data/raw/robusta_data_cleaned.csv"
+  models_dir: "models"
+  reports:
+    figures_dir: "reports/figures"
+    tables_dir: "reports/tables"
+    dashboard_dir: "reports/dashboard"
+
+# --- Variable objetivo y umbral de "café de especialidad" ---
+# TODO: el notebook original nunca define ni construye la variable objetivo.
+# El estándar de la industria (SCA - Specialty Coffee Association) considera "specialty grade"
+# a un lote con Total.Cup.Points >= 80, pero esta es una convención externa, no una decisión
+# tomada todavía dentro de este proyecto. Debes confirmarla/ajustarla tú mismo en la fase 03
+# antes de usarla para etiquetar los datos.
+target:
+  source_column: "Total.Cup.Points"
+  # TODO: definir aquí el nombre de la variable objetivo que se construya en 03_preparacion_de_los_datos
+  target_column: null
+  # TODO: confirmar si se usa el umbral estándar SCA (80) o uno propio, y por qué
+  specialty_threshold: null
+
+# --- Hiperparámetros de modelos ---
+# TODO: no hay ningún modelo entrenado todavía en el notebook original (solo están importados).
+# Cuando se implemente 04_modelado, sus hiperparámetros deben declararse aquí, no como números
+# mágicos dentro del notebook.
+models: {}

@@ -1,0 +1,25 @@
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# SO
+.DS_Store
+Thumbs.db
+
+# data/raw/ SÍ se versiona: los datasets (arabica_data_cleaned.csv ~650 KB,
+# robusta_data_cleaned.csv ~14 KB) son livianos y públicos, y se necesitan
+# para que el repositorio sea reproducible sin pasos manuales adicionales.
+
+# Modelos serializados pesados (> ~50 MB). Si un modelo entrenado supera
+# ese tamaño, descomentar la línea correspondiente o usar Git LFS.
+# models/*.pkl
+# models/*.joblib

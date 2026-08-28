@@ -1,0 +1,17 @@
+# Librerías realmente importadas en el proyecto (notebook original + src/),
+# con versiones fijadas según el entorno de desarrollo (pip freeze).
+numpy==1.26.4
+pandas==2.1.4
+matplotlib==3.7.5
+seaborn==0.13.2
+scikit-learn==1.4.2
+xgboost==3.2.0
+imbalanced-learn==0.14.2
+PyYAML==6.0.3
+
+# Necesarias para ejecutar y reproducir los notebooks
+jupyter==1.1.1
+notebook==7.6.2
+ipykernel==7.3.0
+nbconvert==7.17.1
+nbformat==5.11.1
