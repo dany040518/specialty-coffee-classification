@@ -1,0 +1,269 @@
+Number.of.Bags,altitude_mean_meters,Moisture,Category.One.Defects,Category.Two.Defects,Quakers,Country.of.Origin,Variety,Processing.Method,Color,species,especialidad,prediccion,probabilidad_especialidad
+2,1200.0,0.11,0,0,0.0,Taiwan,Typica,Washed / Wet,Blue-Green,arabica,1,1,0.7470538524575457
+2,1650.0,0.13,0,20,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.7416765571947747
+12,,0.11,2,2,0.0,United States (Hawaii),Hawaiian Kona,Natural / Dry,Bluish-Green,arabica,1,1,0.630417831705901
+1,1500.0,0.03,0,0,0.0,Indonesia,,,,arabica,1,1,0.8391757077312706
+250,1550.0,0.12,0,5,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.3600143561964297
+2,1300.0,0.13,0,1,0.0,Indonesia,Java,Washed / Wet,,arabica,0,1,0.8234336945656964
+302,1500.0,0.12,0,2,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,1,0,0.3150551569852131
+50,750.0,0.14,0,19,0.0,Mexico,Typica,Washed / Wet,Green,arabica,0,0,0.08000094516675678
+10,,0.11,1,0,0.0,United States (Hawaii),Hawaiian Kona,Natural / Dry,Green,arabica,1,1,0.6454922607659005
+300,1488.0,0.12,0,2,0.0,Uganda,,,Green,robusta,1,1,0.8949411227866264
+275,1000.0,0.1,0,1,0.0,Nicaragua,,,Green,arabica,1,0,0.2296422726146036
+250,1200.0,0.11,0,3,0.0,Costa Rica,Catuai,Washed / Wet,Green,arabica,1,1,0.769511908259134
+1,1040.0,0.12,0,2,0.0,Vietnam,Other,Natural / Dry,Green,arabica,1,1,0.89430491668142
+250,1386.84,0.04,1,1,0.0,Guatemala,,,,arabica,1,0,0.41254522697730717
+275,1500.0,0.11,0,3,2.0,Honduras,Caturra,Washed / Wet,Bluish-Green,arabica,1,1,0.7386068611346465
+2,1450.0,0.0,0,1,0.0,El Salvador,Bourbon,Washed / Wet,Green,arabica,1,1,0.8370015018905742
+310,1400.0,0.12,0,4,0.0,Mexico,Typica,Washed / Wet,Green,arabica,0,0,0.2784843415303435
+10,1227.0,0.1,1,5,0.0,Brazil,Catuai,Semi-washed / Semi-pulped,Green,arabica,1,1,0.9649170363842272
+275,1775.0,0.11,0,3,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9477757838068335
+1,800.0,0.12,0,0,0.0,Thailand,,Washed / Wet,Green,arabica,1,0,0.3779480233943068
+2,,0.12,0,0,0.0,Thailand,Other,Washed / Wet,Bluish-Green,arabica,1,1,0.7063785677663045
+50,850.0,0.11,0,0,0.0,Taiwan,Typica,Washed / Wet,Blue-Green,arabica,0,1,0.7162250889631495
+25,1901.0,0.1,0,1,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,1,0.5264698705462018
+250,1500.0,0.1,0,4,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.3642386503115318
+250,1550.0,0.12,10,14,0.0,Mexico,Caturra,Washed / Wet,Green,arabica,1,0,0.20920939265494645
+250,1200.0,0.0,0,3,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,0,1,0.9120825095753052
+300,2075.0,0.12,0,2,0.0,Ethiopia,Other,Washed / Wet,Green,arabica,1,1,0.9744255596456368
+15,1400.0,0.12,0,0,0.0,Mexico,Pacamara,Washed / Wet,Green,arabica,1,1,0.7394922403756312
+250,1050.0,0.1,2,4,0.0,Mexico,Typica,Washed / Wet,Green,arabica,1,0,0.22830252339733356
+245,1850.0,0.0,0,0,0.0,Costa Rica,Caturra,Washed / Wet,Blue-Green,arabica,1,1,0.9140006881667349
+1,,0.01,0,0,0.0,Thailand,,,,arabica,1,1,0.6078109810367225
+14,,0.0,0,2,0.0,United States (Hawaii),,,,arabica,1,0,0.4028772306339206
+60,1200.0,0.1,0,1,0.0,Mexico,Typica,Washed / Wet,Green,arabica,1,0,0.3707138032236177
+250,1200.0,0.14,0,3,0.0,El Salvador,,,,arabica,1,1,0.8607895134184042
+320,1850.0,0.0,0,0,0.0,Costa Rica,Caturra,Washed / Wet,Blue-Green,arabica,1,1,0.9082101923280336
+100,1700.0,0.12,0,1,0.0,Mexico,Typica,Washed / Wet,Blue-Green,arabica,1,0,0.47632759833163363
+10,1400.0,0.12,0,14,0.0,Mexico,Typica,Washed / Wet,,arabica,0,0,0.08140245062232215
+50,1219.2,0.1,0,0,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,0,0,0.4930312387596113
+10,1180.0,0.13,0,0,0.0,Malawi,Gesha,Washed / Wet,Blue-Green,arabica,1,1,0.9556534640254791
+250,442.0,0.0,0,0,0.0,Colombia,Caturra,Natural / Dry,Green,arabica,1,1,0.9389026185272019
+20,1250.0,0.12,0,9,0.0,Mexico,Typica,Washed / Wet,Green,arabica,1,0,0.2213329710608544
+250,,0.11,0,10,0.0,Guatemala,Bourbon,Washed / Wet,,arabica,0,0,0.12890903406201706
+275,1250.0,0.0,0,4,0.0,El Salvador,Pacas,Washed / Wet,Green,arabica,1,1,0.7831526398102143
+320,1.0,0.0,0,0,0.0,Brazil,Yellow Bourbon,Natural / Dry,Green,arabica,1,1,0.8135906295386093
+11,,0.0,0,0,0.0,Kenya,SL28,Washed / Wet,Green,arabica,1,1,0.956338228393089
+250,1310.64,0.12,0,4,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.36713543139544513
+165,,0.0,0,1,1.0,Colombia,,,,arabica,1,1,0.8313854717336076
+450,1371.6,0.1,0,0,0.0,Guatemala,Catuai,Washed / Wet,Green,arabica,1,1,0.5533260144545457
+130,,0.0,0,0,0.0,Colombia,Caturra,Washed / Wet,Blue-Green,arabica,1,1,0.9548034498703697
+20,170.0,0.12,0,0,0.0,Japan,Mundo Novo,Pulped natural / honey,Green,arabica,1,1,0.9681812658532177
+275,,0.11,0,4,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9336314812013047
+60,1600.0,0.1,0,2,0.0,Mexico,Caturra,Washed / Wet,Green,arabica,1,1,0.6841877820148922
+150,,0.05,0,2,0.0,Ethiopia,,,,arabica,1,1,0.9696720670261092
+31,1100.0,0.12,0,3,0.0,Brazil,Mundo Novo,Natural / Dry,Green,arabica,1,1,0.9166756808235208
+2,800.0,0.0,0,0,0.0,Thailand,,Washed / Wet,Green,arabica,1,0,0.28177029409134774
+12,,0.11,1,3,0.0,United States (Hawaii),Hawaiian Kona,Natural / Dry,Green,arabica,0,1,0.5686980566175369
+275,,0.11,0,5,0.0,Guatemala,Caturra,Natural / Dry,Green,arabica,1,1,0.7234099340641603
+18,853.44,0.13,0,0,0.0,United States (Puerto Rico),Other,Washed / Wet,Green,arabica,0,1,0.7964284656106727
+198,,0.11,0,7,0.0,Brazil,,Pulped natural / honey,Green,arabica,1,1,0.7767697534911386
+275,1350.0,0.11,2,6,0.0,Honduras,Pacas,Natural / Dry,Green,arabica,0,0,0.354051265638764
+5,,0.11,4,31,0.0,United States (Hawaii),Hawaiian Kona,Natural / Dry,Green,arabica,0,0,0.05118481134589994
+50,1450.0,0.11,0,0,0.0,Thailand,Caturra,Washed / Wet,,arabica,1,1,0.7798434080997158
+80,,0.1,0,3,1.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.4331840541324783
+1,1650.0,0.12,0,0,0.0,Uganda,SL14,Washed / Wet,Green,arabica,1,1,0.9883279483596131
+300,1750.0,0.01,0,4,0.0,Ethiopia,,,,arabica,1,1,0.9569868667211151
+15,1100.0,0.11,0,3,0.0,Mexico,Typica,Natural / Dry,Green,arabica,1,0,0.40557273761955076
+62,1000.0,0.12,0,0,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,1,0,0.3791979184208343
+50,800.0,0.1,0,0,0.0,Taiwan,Typica,Washed / Wet,Green,arabica,0,1,0.6531345879115468
+75,1750.0,0.0,0,5,0.0,Colombia,Caturra,Washed / Wet,,arabica,1,1,0.8556060369645738
+250,1380.0,0.11,0,5,0.0,Mexico,Typica,Washed / Wet,,arabica,1,0,0.15026400239405258
+250,1219.2,0.1,0,1,0.0,Guatemala,Bourbon,Natural / Dry,Green,arabica,1,0,0.49693774107080557
+23,950.0,0.12,0,0,0.0,Mexico,Typica,Washed / Wet,,arabica,1,0,0.25316388192368977
+320,,0.0,0,3,0.0,Peru,,Washed / Wet,Green,arabica,1,0,0.16866698881440784
+1,,0.0,1,9,0.0,Colombia,,Washed / Wet,Green,arabica,1,0,0.39495032923473233
+25,1901.0,0.1,0,2,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.49975841686636036
+250,442.0,0.11,1,2,0.0,Colombia,,,Green,arabica,1,1,0.8879907111055333
+14,1500.0,0.17,0,6,0.0,Mexico,Typica,Washed / Wet,,arabica,0,0,0.20456380395563958
+65,1600.0,0.12,0,2,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9462086413214261
+250,1250.0,0.12,0,7,0.0,Mexico,Bourbon,Washed / Wet,Blue-Green,arabica,1,0,0.24962723006926374
+250,1700.0,0.08,0,0,0.0,Colombia,,,,arabica,1,1,0.8761978644406047
+100,1775.0,0.0,0,5,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.920667587062695
+300,1260.0,0.1,0,2,0.0,Brazil,Bourbon,Washed / Wet,Green,arabica,1,1,0.7259521652480637
+275,1450.0,0.11,0,4,0.0,Honduras,Catuai,Washed / Wet,Green,arabica,1,0,0.4383753956536001
+250,1550.0,0.0,0,0,0.0,Colombia,Caturra,Washed / Wet,,arabica,1,1,0.8892862757842707
+150,1524.0,0.12,0,3,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.4318446138274281
+240,1100.0,0.11,0,11,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,1,0,0.13662208664928643
+150,200.0,0.0,0,0,0.0,Taiwan,Other,Washed / Wet,Blue-Green,arabica,1,1,0.5430463321610474
+275,1200.0,0.12,0,2,0.0,Mexico,Caturra,Washed / Wet,Green,arabica,1,1,0.6256328683592431
+300,2075.0,0.12,0,1,0.0,Ethiopia,Other,Washed / Wet,Green,arabica,1,1,0.9769596785586213
+5,700.0,0.11,0,0,0.0,Taiwan,Typica,Semi-washed / Semi-pulped,Green,arabica,1,1,0.9288951134509308
+270,1700.0,0.11,0,1,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9566181401436843
+20,1170.0,0.12,0,0,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,1,0,0.4015989622392736
+250,1402.08,0.0,0,10,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.16888167262189094
+10,300.0,0.11,0,0,0.0,Taiwan,Typica,Washed / Wet,Green,arabica,1,1,0.6337301748918914
+250,1850.0,0.0,0,7,0.0,Ethiopia,Other,Washed / Wet,,arabica,1,1,0.8762145728604014
+1,,0.12,63,9,0.0,Vietnam,,Natural / Dry,,robusta,0,0,0.0016337950629007906
+20,,0.0,0,0,7.0,India,,Natural / Dry,Green,arabica,0,1,0.9533743847956238
+1,1493.52,0.0,0,1,0.0,Ethiopia,,,,arabica,1,1,0.9731492953360605
+15,1000.0,0.12,0,12,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,1,0,0.15039898621184783
+275,1400.0,0.1,0,4,0.0,Honduras,Caturra,Washed / Wet,Green,arabica,1,1,0.6188970334705679
+100,1300.0,0.13,31,47,0.0,Mexico,Typica,Natural / Dry,Green,arabica,0,0,0.0007555185849051077
+1,1250.0,0.13,0,4,0.0,Mexico,Bourbon,Washed / Wet,,arabica,1,0,0.19236589890647668
+275,1325.88,0.04,0,1,0.0,Guatemala,,,,arabica,1,0,0.4189266778390524
+275,1450.0,0.1,0,4,0.0,Honduras,Catuai,Washed / Wet,Green,arabica,0,0,0.4294412711437309
+10,808.0,0.11,2,8,0.0,Mexico,Caturra,Washed / Wet,,arabica,1,0,0.2965765380359091
+250,1300.0,0.1,0,3,0.0,Costa Rica,Catuai,Washed / Wet,Green,arabica,1,1,0.7687036947688035
+275,1200.0,0.0,7,9,0.0,Peru,Caturra,Washed / Wet,Green,arabica,0,0,0.40412825682004155
+275,1450.0,0.13,0,1,0.0,Honduras,Catuai,Natural / Dry,Green,arabica,1,1,0.6128026702008512
+275,1022.0,0.13,0,4,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,0,0,0.25341721151961477
+25,157.8864,0.1,1,1,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.37326808555661883
+69,1260.0,0.11,0,0,0.0,Brazil,Yellow Bourbon,Semi-washed / Semi-pulped,Bluish-Green,arabica,1,1,0.9867429126558919
+250,1500.0,0.11,0,2,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.4239079507608047
+250,1800.0,0.1,0,4,0.0,Colombia,,,,arabica,0,1,0.8366752822747598
+275,1450.0,0.12,0,3,0.0,Honduras,Catuai,Washed / Wet,Green,arabica,1,0,0.4739136833923751
+14,1300.0,0.12,0,12,0.0,Mexico,Mundo Novo,Natural / Dry,,arabica,0,0,0.25527164984208556
+3,,0.13,0,6,0.0,United States (Hawaii),Arusha,Natural / Dry,Bluish-Green,arabica,1,0,0.4000301736354101
+50,1700.0,0.1,0,1,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,1,0.5045442640450153
+280,,0.12,0,5,0.0,Peru,,Washed / Wet,Green,arabica,1,0,0.2084366788896831
+25,1800.0,0.11,0,0,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,0,0,0.440416813899431
+16,2500.0,0.13,0,1,0.0,Malawi,Gesha,Washed / Wet,Bluish-Green,arabica,1,1,0.9663363520689449
+26,1350.0,0.14,0,6,0.0,Mexico,Pacamara,Washed / Wet,Green,arabica,1,1,0.6101654564349804
+275,1550.0,0.11,0,6,0.0,Guatemala,Catuai,Washed / Wet,Green,arabica,0,0,0.45821425185116216
+4,,0.04,3,0,0.0,United States (Hawaii),,,,arabica,1,0,0.4419865759712621
+1,1400.0,0.0,0,0,0.0,Mexico,Pacamara,,,arabica,1,1,0.8574414465697283
+1,,0.1,0,4,0.0,Nicaragua,,Natural / Dry,Green,arabica,1,0,0.06181391360368827
+300,1260.0,0.12,0,3,0.0,Brazil,Yellow Bourbon,Washed / Wet,Blue-Green,arabica,1,1,0.8739406053961299
+320,934.0,0.11,0,3,2.0,Brazil,Bourbon,Natural / Dry,Bluish-Green,arabica,1,1,0.8134850386199423
+300,1200.0,0.0,1,1,0.0,Brazil,Yellow Bourbon,Semi-washed / Semi-pulped,Green,arabica,1,1,0.9635231248115326
+250,2000.0,0.0,1,20,0.0,Ethiopia,Ethiopian Heirlooms,Washed / Wet,Bluish-Green,arabica,1,1,0.8824782742379786
+20,1250.0,0.11,0,2,0.0,Mexico,Typica,Washed / Wet,Green,arabica,1,0,0.3668686332620735
+10,1700.0,0.13,0,5,0.0,"Tanzania, United Republic Of",Bourbon,Washed / Wet,Green,arabica,1,1,0.9333992078561215
+250,1350.0,0.12,0,2,0.0,Guatemala,Caturra,Washed / Wet,,arabica,1,1,0.5875034810262658
+300,,0.1,0,2,0.0,Ethiopia,,,,arabica,1,1,0.9707934057767373
+275,1417.32,0.1,0,4,0.0,Guatemala,Catuai,Washed / Wet,Green,arabica,0,0,0.4919411452892269
+4,,0.11,0,0,0.0,United States (Hawaii),Hawaiian Kona,Natural / Dry,Bluish-Green,arabica,1,1,0.7098278847825336
+125,1775.0,0.11,0,3,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9544187716327116
+275,1200.0,0.09,0,7,0.0,Nicaragua,,Washed / Wet,Green,arabica,1,0,0.02443981954759327
+10,1400.0,0.1,0,1,0.0,Mexico,Other,Washed / Wet,,arabica,1,0,0.23924856924503027
+1,1525.0,0.12,0,5,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9298036709114403
+1,1650.0,0.12,0,0,0.0,Uganda,SL14,Natural / Dry,Green,arabica,1,1,0.99144038071123
+250,1400.0,0.1,0,0,0.0,Guatemala,Caturra,Washed / Wet,Green,arabica,1,1,0.7683077390374575
+12,1499.9208,0.01,0,0,0.0,Thailand,,,,arabica,1,1,0.6196029744692105
+10,1700.0,0.12,0,6,0.0,"Tanzania, United Republic Of",Other,Semi-washed / Semi-pulped,Green,arabica,1,1,0.9880307187122416
+1,,0.0,0,0,0.0,Uganda,,Semi-washed / Semi-pulped,,arabica,1,1,0.964911781929523
+275,1400.0,0.1,0,4,0.0,Honduras,Caturra,Natural / Dry,Green,arabica,1,1,0.6895796981002684
+275,1752.6,0.11,0,3,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.41164885705520315
+250,1524.0,0.12,2,5,0.0,Guatemala,Pacas,Washed / Wet,Green,arabica,1,0,0.3941872623149615
+300,250.5,0.1,0,1,0.0,Kenya,SL28,Washed / Wet,Bluish-Green,arabica,1,1,0.9502881417751176
+5,,0.12,2,3,0.0,United States (Hawaii),Hawaiian Kona,Natural / Dry,Green,arabica,0,1,0.5621959789759214
+300,1750.0,0.1,0,4,0.0,Ethiopia,,,,arabica,1,1,0.9686181789016126
+288,,0.0,2,5,0.0,El Salvador,Other,Washed / Wet,Green,arabica,1,1,0.6855202544711266
+39,1600.0,0.13,0,4,0.0,"Tanzania, United Republic Of",Bourbon,Washed / Wet,Green,arabica,1,1,0.9362901463436973
+10,1296.0,0.11,0,0,0.0,Mexico,Typica,Washed / Wet,Green,arabica,1,0,0.4236980691022003
+10,1700.0,0.12,0,1,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9551507838535751
+250,1850.0,0.0,0,8,0.0,Ethiopia,Ethiopian Yirgacheffe,Natural / Dry,,arabica,1,1,0.940548525214803
+4,1200.0,0.11,0,2,0.0,Brazil,Bourbon,Natural / Dry,Green,arabica,1,1,0.8301939908347992
+275,1250.0,0.0,0,4,0.0,El Salvador,Bourbon,Washed / Wet,,arabica,1,1,0.5752274518469032
+50,1250.0,0.13,0,5,0.0,Mexico,Bourbon,Washed / Wet,Green,arabica,1,0,0.2889871835784822
+200,973.0,0.11,0,3,1.0,Brazil,Mundo Novo,Natural / Dry,Green,arabica,1,1,0.9037342335980684
+114,1877.0,0.12,0,4,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9367239763205438
+35,1100.0,0.11,0,1,0.0,Brazil,Catuai,Semi-washed / Semi-pulped,Blue-Green,arabica,1,1,0.9824400599761369
+18,853.44,0.0,0,0,0.0,United States (Puerto Rico),Other,Washed / Wet,Green,arabica,1,1,0.7091521996298943
+275,1350.0,0.11,0,1,0.0,Costa Rica,,,Blue-Green,arabica,1,1,0.8811801335701801
+10,1317.0,0.12,0,1,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,,arabica,1,1,0.9045309316989721
+1,1650.0,0.12,0,1,0.0,Uganda,SL14,Natural / Dry,Green,arabica,1,1,0.9904834258549154
+20,1500.0,0.12,0,0,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9565752001872843
+200,,0.11,0,0,1.0,Peru,,,Green,arabica,1,1,0.7652493613876202
+275,,0.11,0,2,0.0,Guatemala,Catuai,Natural / Dry,Bluish-Green,arabica,1,1,0.6720334755727867
+320,1.0,0.0,0,0,0.0,Brazil,Yellow Bourbon,Natural / Dry,Green,arabica,1,1,0.8135906295386093
+150,,0.05,0,2,0.0,Ethiopia,,,,arabica,1,1,0.9696720670261092
+100,950.0,0.11,0,4,0.0,Brazil,Mundo Novo,Natural / Dry,Green,arabica,1,1,0.8948404339631201
+275,1099.4136,0.1,0,1,0.0,Guatemala,Caturra,Washed / Wet,Green,arabica,1,1,0.7255865042801394
+2,925.0,0.18,0,2,0.0,Nicaragua,,,,arabica,1,0,0.18574379067514443
+250,1219.2,0.09,0,0,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.43660228591162653
+80,1219.2,0.11,0,2,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.4417653438188894
+275,1350.0,0.11,0,2,0.0,Honduras,Catuai,Washed / Wet,Green,arabica,1,0,0.4835833827909801
+1,,0.1,5,20,0.0,Costa Rica,Catuai,Washed / Wet,,arabica,0,0,0.19594158401783182
+200,1100.0,0.12,0,0,0.0,Mexico,Other,Washed / Wet,Green,arabica,1,0,0.3622332541209017
+250,1300.0,0.12,0,8,0.0,Mexico,Typica,Washed / Wet,Green,arabica,0,0,0.2051552698004131
+36,1900.0,0.12,1,1,1.0,Costa Rica,Catuai,Washed / Wet,Green,arabica,1,1,0.8690374179807728
+37,1600.0,0.12,0,1,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9526190575705255
+250,1400.0,0.13,0,1,0.0,Mexico,Typica,Washed / Wet,Green,arabica,0,0,0.3687529172425293
+275,1901.0,0.1,0,1,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.4669450455857661
+23,1300.0,0.13,0,3,0.0,Mexico,Typica,Washed / Wet,Green,arabica,0,0,0.3619703028996317
+100,1775.0,0.11,0,3,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9554446976437528
+275,1250.0,0.11,0,2,0.0,El Salvador,Bourbon,Washed / Wet,Green,arabica,1,1,0.832754555265252
+300,1750.0,0.2,0,3,0.0,Ethiopia,,,,arabica,1,1,0.9801658621729862
+75,1050.0,0.11,0,1,0.0,Brazil,Catuai,Semi-washed / Semi-pulped,Blue-Green,arabica,1,1,0.9814828209270595
+250,1800.0,0.13,4,13,0.0,Mexico,Typica,Washed / Wet,Green,arabica,1,0,0.12221043440260043
+1,1575.0,0.12,0,2,0.0,Costa Rica,Bourbon,Semi-washed / Semi-pulped,Bluish-Green,arabica,1,1,0.9623224502148321
+275,1850.0,0.11,0,3,0.0,Costa Rica,Caturra,Washed / Wet,Green,arabica,1,1,0.8978417954599036
+250,1310.64,0.11,1,1,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,0,0,0.4183442462224818
+2,1400.0,0.14,0,3,0.0,Philippines,Other,Washed / Wet,Green,arabica,1,1,0.5530228683950025
+320,890.0,0.11,0,4,0.0,Brazil,Bourbon,Natural / Dry,Green,arabica,1,1,0.7257446134866481
+1,,0.11,0,0,0.0,Honduras,,Washed / Wet,Green,arabica,1,0,0.2413146811730373
+250,1310.64,0.11,0,1,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.43534797039422896
+320,1.0,0.0,0,0,0.0,Brazil,Yellow Bourbon,Natural / Dry,Green,arabica,1,1,0.8135906295386093
+18,1280.0,0.13,23,29,0.0,Mexico,Typica,Washed / Wet,Bluish-Green,arabica,0,0,0.008769343200162646
+30,1650.0,0.12,0,4,0.0,Mexico,Other,Washed / Wet,Green,arabica,1,0,0.34156279493252933
+1,280.0,0.12,0,0,0.0,Mauritius,,,Green,arabica,1,1,0.8579841425431142
+320,890.0,0.0,0,4,0.0,Brazil,Bourbon,Natural / Dry,Green,arabica,1,1,0.6394631383655558
+250,1300.0,0.11,0,0,0.0,Costa Rica,Caturra,Washed / Wet,Green,arabica,1,1,0.9123862185131201
+275,1250.0,0.1,0,5,0.0,Nicaragua,Caturra,Washed / Wet,Green,arabica,1,0,0.25100189190139405
+320,1800.0,0.12,0,1,0.0,Kenya,SL34,Washed / Wet,Blue-Green,arabica,1,1,0.932839597466946
+94,,0.11,0,7,0.0,Brazil,,,Green,arabica,1,1,0.8296197092272894
+25,190164.0,0.1,0,1,4.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,0,1,1.0
+50,,0.12,0,0,0.0,Guatemala,Bourbon,,Green,arabica,1,1,0.873915814061562
+275,1000.0,0.1,0,0,0.0,Nicaragua,,,Bluish-Green,arabica,0,0,0.292483311236185
+275,1371.6,0.1,0,2,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.3994343482357765
+250,900.0,0.1,0,3,0.0,Mexico,Typica,Washed / Wet,Green,arabica,1,0,0.2650880615578802
+50,1219.2,0.1,0,2,2.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.4792446285279234
+275,1350.0,0.09,0,4,0.0,Honduras,Catuai,Washed / Wet,Green,arabica,1,0,0.4128184881741493
+320,750.0,0.0,0,0,0.0,India,,,Green,robusta,1,1,0.8481637940171611
+42,1100.0,0.11,0,0,0.0,Brazil,Catuai,Natural / Dry,Green,arabica,1,1,0.9095177147480076
+10,940.0,0.11,0,21,0.0,Mexico,Typica,Semi-washed / Semi-pulped,Green,arabica,1,0,0.3149220699819647
+300,1635.0,0.03,0,0,0.0,Ethiopia,,,,arabica,1,1,0.972514189665763
+250,1500.0,0.1,0,1,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.44122811907561726
+275,1775.0,0.11,1,2,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9495979311127163
+1,1038.5,0.11,0,3,0.0,Brazil,Mundo Novo,Natural / Dry,Green,arabica,1,1,0.9145637572472248
+250,1775.0,0.11,0,9,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.907269444537176
+250,1750.0,0.11,0,0,0.0,Colombia,Caturra,Washed / Wet,Blue-Green,arabica,1,1,0.9699963372525502
+50,1450.0,0.12,0,1,0.0,Thailand,Caturra,Washed / Wet,Blue-Green,arabica,1,1,0.8931125659930189
+288,,0.0,0,17,0.0,El Salvador,Other,Washed / Wet,,arabica,1,0,0.25862422467292884
+300,1200.0,0.0,0,2,0.0,Kenya,SL34,Washed / Wet,Green,arabica,1,1,0.8422659511170981
+20,1250.0,0.12,0,19,0.0,Mexico,Typica,Washed / Wet,Green,arabica,0,0,0.08888188068357201
+250,2136.0,0.11,0,4,0.0,Colombia,Caturra,Natural / Dry,Green,arabica,1,1,0.9624434835910879
+300,,0.11,0,3,0.0,Brazil,Catuai,Natural / Dry,Green,arabica,1,1,0.8591121323572055
+250,1700.0,0.12,0,0,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9496288269323431
+274,1400.0,0.12,0,1,0.0,Honduras,Caturra,Washed / Wet,Green,arabica,1,1,0.7066986367200558
+275,1775.0,0.0,0,1,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9377519222585206
+320,1000.0,0.11,0,0,0.0,India,Other,Natural / Dry,Green,robusta,1,1,0.8383090750540871
+150,1250.0,0.13,0,6,0.0,Indonesia,Typica,Semi-washed / Semi-pulped,Blue-Green,arabica,1,1,0.9590739765437903
+250,1310.64,0.11,0,2,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.4092639701451437
+300,1500.0,0.12,0,5,0.0,"Tanzania, United Republic Of",Bourbon,Washed / Wet,Green,arabica,1,1,0.9058142754961004
+10,774.0,0.13,2,9,0.0,Mexico,Bourbon,Washed / Wet,,arabica,1,0,0.09376487457218231
+250,1300.0,0.11,0,3,0.0,Costa Rica,Catuai,Washed / Wet,Green,arabica,1,1,0.7751074702017027
+250,1550.0,0.0,0,0,0.0,Colombia,Caturra,Washed / Wet,,arabica,1,1,0.8892862757842707
+250,1219.2,0.1,0,0,0.0,Guatemala,Bourbon,Other,Green,arabica,1,1,0.663361530317255
+250,,0.1,1,3,0.0,Colombia,,,,arabica,1,1,0.8198611745108965
+275,1350.0,0.11,0,3,0.0,Honduras,Caturra,Natural / Dry,Green,arabica,1,1,0.7161740718155688
+1,,0.11,1,0,0.0,Colombia,,Washed / Wet,Green,arabica,1,1,0.7183025367159332
+4,,0.0,0,0,0.0,United States (Hawaii),,,,arabica,1,0,0.4575858244728881
+300,,0.12,0,6,0.0,Brazil,Yellow Bourbon,Semi-washed / Semi-pulped,Green,arabica,1,1,0.9637498416765025
+17,853.44,0.0,0,0,0.0,United States (Puerto Rico),Other,Washed / Wet,Bluish-Green,arabica,1,1,0.7525497123490779
+1,,0.1,20,1,0.0,India,,Natural / Dry,Green,robusta,0,0,0.38240962717077753
+25,190164.0,0.12,0,0,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,1,1.0
+250,1750.0,0.11,0,1,0.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9580469297711204
+275,1500.0,0.1,0,3,0.0,Honduras,Caturra,,Green,arabica,1,1,0.923133457913377
+1,40.0,0.0,0,0,0.0,Ecuador,,,Blue-Green,robusta,0,0,0.19358491019123977
+250,1750.0,0.0,0,0,0.0,Colombia,Caturra,Natural / Dry,Bluish-Green,arabica,1,1,0.966705634567793
+275,,0.12,3,4,0.0,Nicaragua,,Washed / Wet,Green,arabica,1,0,0.03136586060812102
+3,1680.0,0.1,0,1,0.0,China,Catimor,Washed / Wet,Green,arabica,1,1,0.917092378616547
+10,981.0,0.13,2,7,0.0,Mexico,Typica,Semi-washed / Semi-pulped,,arabica,1,0,0.494680859013104
+6,,0.1,0,0,0.0,United States (Hawaii),Hawaiian Kona,Natural / Dry,Bluish-Green,arabica,1,1,0.7018803610148667
+10,758.0,0.12,0,0,0.0,Taiwan,Typica,Washed / Wet,Bluish-Green,arabica,1,1,0.7211963569632022
+25,,0.0,2,1,0.0,United States (Hawaii),,,,arabica,1,0,0.39268128434573824
+125,,0.0,0,5,1.0,Colombia,Caturra,Washed / Wet,Green,arabica,1,1,0.9136622485572137
+300,,0.11,0,0,1.0,Brazil,,,Green,arabica,1,1,0.901540781210707
+20,1200.0,0.11,0,3,0.0,Taiwan,Typica,Washed / Wet,Green,arabica,1,1,0.6234643843683138
+1,,0.0,0,3,0.0,Peru,,,,arabica,1,0,0.47080303980621657
+2,1200.0,0.12,0,7,0.0,Indonesia,Java,Washed / Wet,Green,arabica,1,1,0.8202428457321218
+275,1400.0,0.1,0,5,0.0,Honduras,Caturra,Natural / Dry,Green,arabica,1,1,0.6662360859808133
+150,1900.0,0.11,0,0,0.0,Rwanda,Bourbon,Washed / Wet,Bluish-Green,arabica,1,1,0.8117137608923993
+10,1150.0,0.11,0,0,0.0,Mexico,Caturra,Washed / Wet,Green,arabica,1,1,0.7166343438984238
+1,1350.0,0.12,0,3,0.0,"Tanzania, United Republic Of",Other,Washed / Wet,Green,arabica,1,1,0.9394530670844948
+250,1310.64,0.1,2,5,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.2966635108721565
+130,3280.0,0.1,2,6,0.0,Guatemala,Bourbon,Washed / Wet,Green,arabica,1,0,0.44298217691336716
+6,1200.0,0.12,0,1,0.0,Uganda,,,Green,robusta,1,1,0.9196708656111794

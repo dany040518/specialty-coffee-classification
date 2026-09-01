@@ -1,0 +1,19 @@
+{
+  "model_name": "logistic_regression",
+  "hyperparams": {
+    "max_iter": 1000,
+    "C": 1.0,
+    "class_weight": null
+  },
+  "random_seed": 42,
+  "cv_folds": 5,
+  "cv_metrics": {
+    "accuracy": 0.6869158878504673,
+    "precision": 0.9163444702020038,
+    "recall": 0.7003349001175089,
+    "f1": 0.7938841648517453,
+    "roc_auc": 0.7418668875021949
+  },
+  "trained_at": "2026-09-01T23:39:34.574941+00:00",
+  "n_train_rows": 1070
+}

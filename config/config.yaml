@@ -21,20 +21,29 @@ paths:
     dashboard_dir: "reports/dashboard"
 
 # --- Variable objetivo y umbral de "café de especialidad" ---
-# TODO: el notebook original nunca define ni construye la variable objetivo.
-# El estándar de la industria (SCA - Specialty Coffee Association) considera "specialty grade"
-# a un lote con Total.Cup.Points >= 80, pero esta es una convención externa, no una decisión
-# tomada todavía dentro de este proyecto. Debes confirmarla/ajustarla tú mismo en la fase 03
-# antes de usarla para etiquetar los datos.
+# Decisión tomada en la fase 03 (ver notebooks/03_preparacion_de_los_datos.ipynb):
+# se usa el umbral estándar de la industria (SCA - Specialty Coffee Association),
+# que considera "specialty grade" a un lote con Total.Cup.Points >= 80. El único
+# registro con Total.Cup.Points == 0 (dato corrupto, ver notebook 02) se elimina
+# ANTES de aplicar este umbral (src/data/clean_data.py -> DropCorruptScores).
 target:
   source_column: "Total.Cup.Points"
-  # TODO: definir aquí el nombre de la variable objetivo que se construya en 03_preparacion_de_los_datos
-  target_column: null
-  # TODO: confirmar si se usa el umbral estándar SCA (80) o uno propio, y por qué
-  specialty_threshold: null
+  target_column: "especialidad"
+  specialty_threshold: 80
+
+# --- Split train/test ---
+# Estratificado por la variable objetivo, usando project.random_seed.
+split:
+  test_size: 0.2
 
 # --- Hiperparámetros de modelos ---
-# TODO: no hay ningún modelo entrenado todavía en el notebook original (solo están importados).
-# Cuando se implemente 04_modelado, sus hiperparámetros deben declararse aquí, no como números
-# mágicos dentro del notebook.
-models: {}
+# Cada clave corresponde a un modelo de src/models/train_model.py::MODEL_REGISTRY.
+# Iteración actual: solo regresión logística (baseline). class_weight se deja en
+# None porque el balanceo de clases ya lo maneja SMOTE dentro del pipeline de
+# entrenamiento (src/models/train_model.py) — combinar SMOTE + class_weight
+# sobre-corregiría el desbalance.
+models:
+  logistic_regression:
+    max_iter: 1000
+    C: 1.0
+    class_weight: null
