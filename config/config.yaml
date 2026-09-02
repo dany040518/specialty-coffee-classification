@@ -28,12 +28,35 @@ paths:
     dashboard_dir: "reports/dashboard"
 
 # --- Alcance de especies ---
-# Arabica y robusta se catan con formularios sensoriales distintos (los nombres
-# de los atributos no coinciden: 'Aroma' vs 'Fragrance...Aroma', 'Acidity' vs
-# 'Salt...Acid', etc.). La decisión de agrupar SOLO arabica o de combinar ambas
-# especies está PENDIENTE y se toma y documenta en la fase 03.
+# Decisión tomada en la fase 03 (notebooks/03_preparacion_de_los_datos.ipynb,
+# sección 3.5): se trabaja SOLO con arabica. Robusta se descarta porque usa otro
+# formulario de catación (Fine Robusta, atributos que no existen en arabica),
+# tiene alta nulidad en variables de perfilado (Variety ~89 %, Processing.Method
+# ~64 %, Moisture ~43 % en 0) y solo cuenta con 28 registros.
 dataset:
-  species: null   # TODO fase 03: "arabica" | "combined"
+  species: "arabica"   # "arabica" | "combined"
+
+# --- Preparación de los datos (fase 03) ---
+# Parámetros de limpieza, para no dejarlos como números mágicos en el notebook.
+preparation:
+  # Columnas que se eliminan: identificadores administrativos con alta nulidad y
+  # columnas de altitud redundantes / de texto libre (ver fase 02, sección 2.7).
+  drop_columns:
+    - "Unnamed: 0"
+    - "Lot.Number"
+    - "Farm.Name"
+    - "Mill"
+    - "ICO.Number"
+    - "Producer"
+    - "Company"
+    - "Altitude"
+    - "altitude_low_meters"
+    - "altitude_high_meters"
+    - "Region"
+  # altitude_mean_meters fuera de este rango (metros) -> NaN.
+  altitude_valid_range: [200, 3000]
+  # Moisture == 0 se trata como dato faltante (la humedad del grano nunca es 0 %).
+  zero_as_missing: ["Moisture"]
 
 # --- Clustering ---
 clustering:
