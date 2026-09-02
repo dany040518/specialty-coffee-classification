@@ -53,6 +53,23 @@ preparation:
     - "altitude_low_meters"
     - "altitude_high_meters"
     - "Region"
+  # Segundo grupo de columnas eliminadas en la fase 03 (sección 3.6): 'Species'
+  # es constante (solo arabica), y el resto son datos administrativos del
+  # proceso de certificación (identificadores, fechas, empaque) que no
+  # describen el café ni sirven para agrupar o perfilar.
+  drop_columns_admin:
+    - "Species"
+    - "Owner"
+    - "Owner.1"
+    - "Certification.Body"
+    - "Certification.Address"
+    - "Certification.Contact"
+    - "In.Country.Partner"
+    - "Grading.Date"
+    - "Expiration"
+    - "Bag.Weight"
+    - "unit_of_measurement"
+    - "Number.of.Bags"
   # altitude_mean_meters fuera de este rango (metros) -> NaN.
   altitude_valid_range: [200, 3000]
   # Moisture == 0 se trata como dato faltante (la humedad del grano nunca es 0 %).
@@ -60,13 +77,12 @@ preparation:
 
 # --- Clustering ---
 clustering:
-  # Atributos de catación SCA usados como ENTRADA del agrupamiento.
+  # Atributos de catación SCA que ENTRAN al agrupamiento.
   # Nombres tal como aparecen en data/raw/arabica_data_cleaned.csv.
-  # No se incluye 'Total.Cup.Points' porque es la suma de estos subpuntajes
-  # (sería redundante y dominaría la distancia). Si en la fase 03 se decide
-  # combinar con robusta, esta lista se ajusta a las columnas equivalentes.
-  # La fase 03 puede además descartar atributos casi constantes (p. ej.
-  # Uniformity / Clean.Cup / Sweetness suelen valer 10 en casi todos los lotes).
+  # No se incluye 'Total.Cup.Points' porque es la suma de los subpuntajes.
+  # Se dejaron FUERA 'Uniformity', 'Clean.Cup' y 'Sweetness' (fase 03, sección
+  # 3.10): son casi constantes en 10 (ver fase 02 y sección 3.7.1), no separan
+  # lotes. Quedan 7 atributos.
   features:
     - "Aroma"
     - "Flavor"
@@ -74,9 +90,6 @@ clustering:
     - "Acidity"
     - "Body"
     - "Balance"
-    - "Uniformity"
-    - "Clean.Cup"
-    - "Sweetness"
     - "Cupper.Points"
   # Variables para DESCRIBIR / perfilar los grupos una vez formados.
   # NO entran al agrupamiento; se usan en las fases 05-06 y en el dashboard.
