@@ -1,10 +1,17 @@
 # Configuración central del proyecto.
 # Todas las rutas son RELATIVAS a la raíz del repositorio (nunca rutas absolutas tipo C:/Users/...).
 # Los notebooks y los módulos de src/ deben leer sus parámetros de aquí, no hardcodearlos.
+#
+# ENFOQUE: el proyecto es de aprendizaje NO supervisado (clustering). No hay
+# variable objetivo. Se agrupan los lotes de café por sus atributos sensoriales
+# de catación y luego se caracterizan esos grupos con variables de origen y
+# manejo (ver notebooks/01_comprension_del_negocio.ipynb, secciones 1.2 y 1.4).
 
 project:
-  name: "Clasificación de café de especialidad (CQI)"
-  random_seed: 42   # semilla única para todo split / validación cruzada / modelo que se implemente (fases 03-06)
+  name: "Perfiles de calidad de café mediante clustering (CQI)"
+  random_seed: 42   # semilla única para todo procedimiento con aleatoriedad:
+                    # inicialización de k-means, submuestreos de estabilidad,
+                    # proyecciones 2D, etc. (fases 03-06)
 
 paths:
   data:
@@ -20,30 +27,63 @@ paths:
     tables_dir: "reports/tables"
     dashboard_dir: "reports/dashboard"
 
-# --- Variable objetivo y umbral de "café de especialidad" ---
-# Decisión tomada en la fase 03 (ver notebooks/03_preparacion_de_los_datos.ipynb):
-# se usa el umbral estándar de la industria (SCA - Specialty Coffee Association),
-# que considera "specialty grade" a un lote con Total.Cup.Points >= 80. El único
-# registro con Total.Cup.Points == 0 (dato corrupto, ver notebook 02) se elimina
-# ANTES de aplicar este umbral (src/data/clean_data.py -> DropCorruptScores).
-target:
-  source_column: "Total.Cup.Points"
-  target_column: "especialidad"
+# --- Alcance de especies ---
+# Arabica y robusta se catan con formularios sensoriales distintos (los nombres
+# de los atributos no coinciden: 'Aroma' vs 'Fragrance...Aroma', 'Acidity' vs
+# 'Salt...Acid', etc.). La decisión de agrupar SOLO arabica o de combinar ambas
+# especies está PENDIENTE y se toma y documenta en la fase 03.
+dataset:
+  species: null   # TODO fase 03: "arabica" | "combined"
+
+# --- Clustering ---
+clustering:
+  # Atributos de catación SCA usados como ENTRADA del agrupamiento.
+  # Nombres tal como aparecen en data/raw/arabica_data_cleaned.csv.
+  # No se incluye 'Total.Cup.Points' porque es la suma de estos subpuntajes
+  # (sería redundante y dominaría la distancia). Si en la fase 03 se decide
+  # combinar con robusta, esta lista se ajusta a las columnas equivalentes.
+  # La fase 03 puede además descartar atributos casi constantes (p. ej.
+  # Uniformity / Clean.Cup / Sweetness suelen valer 10 en casi todos los lotes).
+  features:
+    - "Aroma"
+    - "Flavor"
+    - "Aftertaste"
+    - "Acidity"
+    - "Body"
+    - "Balance"
+    - "Uniformity"
+    - "Clean.Cup"
+    - "Sweetness"
+    - "Cupper.Points"
+  # Variables para DESCRIBIR / perfilar los grupos una vez formados.
+  # NO entran al agrupamiento; se usan en las fases 05-06 y en el dashboard.
+  profiling_features:
+    - "Country.of.Origin"
+    - "altitude_mean_meters"
+    - "Variety"
+    - "Processing.Method"
+    - "Color"
+    - "Harvest.Year"
+  scaler: "standard"   # estandarización (media 0, desv. 1) antes de agrupar,
+                       # para que ningún atributo pese más por su escala
+  k_min: 2             # rango de número de grupos a evaluar en la fase 04
+  k_max: 10
+  # Algoritmos candidatos a comparar en la fase 04 (selección por calidad de
+  # agrupamiento). Sus parámetros específicos se declararán aquí cuando se
+  # implemente el modelado, no como números mágicos dentro del notebook.
+  algorithms:
+    kmeans: {}
+    agglomerative: {}
+    gaussian_mixture: {}
+
+# --- Validación de los grupos (fase 05) ---
+validation:
+  # Medidas de calidad de agrupamiento (no requieren etiqueta verdadera).
+  internal_metrics:
+    - "silhouette"          # métrica principal (ver notebook 01, sección 1.5)
+    - "davies_bouldin"
+    - "calinski_harabasz"
+  # Columna que NO entra al clustering: se usa solo para CONTRASTAR los grupos
+  # obtenidos contra la convención de la industria (café de especialidad).
+  reference_column: "Total.Cup.Points"
   specialty_threshold: 80
-
-# --- Split train/test ---
-# Estratificado por la variable objetivo, usando project.random_seed.
-split:
-  test_size: 0.2
-
-# --- Hiperparámetros de modelos ---
-# Cada clave corresponde a un modelo de src/models/train_model.py::MODEL_REGISTRY.
-# Iteración actual: solo regresión logística (baseline). class_weight se deja en
-# None porque el balanceo de clases ya lo maneja SMOTE dentro del pipeline de
-# entrenamiento (src/models/train_model.py) — combinar SMOTE + class_weight
-# sobre-corregiría el desbalance.
-models:
-  logistic_regression:
-    max_iter: 1000
-    C: 1.0
-    class_weight: null
