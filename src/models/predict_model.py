@@ -1,32 +1,9 @@
-"""Generación de predicciones con un modelo ya entrenado (fase 05/06)."""
+"""Asignación de nuevos lotes a un grupo del clustering (fase 05/06).
 
-from pathlib import Path
+TODO fase 04/05. Cargará el modelo de clustering guardado en `models/` y
+asignará lotes nuevos al grupo más cercano (donde el algoritmo lo permita,
+p. ej. k-means o gaussian mixture).
 
-import numpy as np
-import pandas as pd
-
-from src.config import resolve_path
-from src.models.base import Predictor
-
-
-class ModelPredictor(Predictor):
-    """Carga un pipeline serializado (`.joblib`, guardado por
-    `train_model.save_model`) y genera predicciones sobre datos nuevos.
-    """
-
-    def __init__(self, model_path: Path | str):
-        import joblib
-
-        self.model_path = Path(model_path)
-        self.pipeline = joblib.load(self.model_path)
-
-    @classmethod
-    def from_config(cls, config: dict, model_name: str = "logistic_regression") -> "ModelPredictor":
-        models_dir = resolve_path(config["paths"]["models_dir"])
-        return cls(models_dir / f"{model_name}.joblib")
-
-    def predict(self, X: pd.DataFrame) -> np.ndarray:
-        return self.pipeline.predict(X)
-
-    def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
-        return self.pipeline.predict_proba(X)[:, 1]
+El contenido supervisado anterior (`predict` / `predict_proba` de un pipeline
+de clasificación) se eliminó al cambiar el proyecto a clustering.
+"""
