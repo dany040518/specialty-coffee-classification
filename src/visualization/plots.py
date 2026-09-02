@@ -70,6 +70,64 @@ def plot_categorical_counts(
     return fig
 
 
+def plot_missing_matrix(
+    df: pd.DataFrame, config: dict, filename: str, title: str = "Mapa de valores faltantes"
+) -> plt.Figure:
+    """Mapa de calor de valores faltantes (una franja por columna): cada celda
+    marcada = valor nulo. Permite ver de un vistazo qué columnas concentran los
+    nulos y si faltan "en bloque" (mismas filas) o de forma dispersa.
+    """
+    fig, ax = plt.subplots(figsize=(12, 6))
+    sns.heatmap(df.isnull(), cmap="viridis", cbar=False, yticklabels=False, ax=ax)
+    ax.set_title(title)
+    ax.set_xlabel("Columnas")
+    fig.tight_layout()
+    _save(fig, config, filename)
+    return fig
+
+
+def plot_feature_distributions(
+    df: pd.DataFrame, columns: list[str], config: dict, filename: str, ncols: int = 4, bins: int = 30
+) -> plt.Figure:
+    """Grilla de histogramas (con KDE) para varias variables numéricas a la vez,
+    por ejemplo los subpuntajes de catación que alimentan el clustering.
+    """
+    cols = [c for c in columns if c in df.columns]
+    nrows = -(-len(cols) // ncols)  # techo de la división
+    fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 3.2, nrows * 2.8))
+    axes = np.atleast_1d(axes).ravel()
+    for ax, col in zip(axes, cols):
+        sns.histplot(df[col].dropna(), kde=True, bins=bins, ax=ax)
+        ax.set_title(col, fontsize=10)
+        ax.set_xlabel("")
+    for ax in axes[len(cols):]:
+        ax.set_visible(False)
+    fig.tight_layout()
+    _save(fig, config, filename)
+    return fig
+
+
+def plot_boxplots(
+    df: pd.DataFrame, columns: list[str], config: dict, filename: str, ncols: int = 5
+) -> plt.Figure:
+    """Grilla de boxplots para inspeccionar valores atípicos y variables casi
+    constantes en un conjunto de columnas numéricas.
+    """
+    cols = [c for c in columns if c in df.columns]
+    nrows = -(-len(cols) // ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 2.4, nrows * 3.0))
+    axes = np.atleast_1d(axes).ravel()
+    for ax, col in zip(axes, cols):
+        sns.boxplot(y=df[col].dropna(), ax=ax)
+        ax.set_title(col, fontsize=9)
+        ax.set_ylabel("")
+    for ax in axes[len(cols):]:
+        ax.set_visible(False)
+    fig.tight_layout()
+    _save(fig, config, filename)
+    return fig
+
+
 # --- Fase 05: evaluación -----------------------------------------------------------
 
 
