@@ -146,5 +146,5 @@ El dashboard (Power BI o Tableau) se construye por fuera de este repositorio. [`
 - Los objetivos específicos y los criterios de éxito de `01_comprension_del_negocio.ipynb` quedan como decisión pendiente del equipo (`TODO (autor)`); una vez definidos, `05_evaluacion.ipynb` debe contrastarlos explícitamente contra las métricas de test.
 
 ## Autores
-
-TODO: completar con los nombres de los integrantes del grupo (máximo 3, según los lineamientos de la actividad).
+Mariana Valle Moreno
+Danna Alejandra Sanchez Monsalve
