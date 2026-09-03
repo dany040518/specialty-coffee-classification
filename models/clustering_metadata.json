@@ -1,0 +1,15 @@
+{
+  "representacion": "pca_2",
+  "algoritmo": "kmeans",
+  "k": 3,
+  "random_seed": 42,
+  "n_lotes": 1310,
+  "silhouette": 0.4279,
+  "davies_bouldin": 0.7608,
+  "calinski_harabasz": 1505.9,
+  "tam_grupos": {
+    "0": 708,
+    "1": 295,
+    "2": 307
+  }
+}

@@ -104,13 +104,25 @@ clustering:
                        # para que ningún atributo pese más por su escala
   k_min: 2             # rango de número de grupos a evaluar en la fase 04
   k_max: 10
-  # Algoritmos candidatos a comparar en la fase 04 (selección por calidad de
-  # agrupamiento). Sus parámetros específicos se declararán aquí cuando se
-  # implemente el modelado, no como números mágicos dentro del notebook.
+  # Algoritmos que se comparan en la fase 04 (sección 4.5), con sus parámetros
+  # propios; lo que no aparezca aquí queda en los valores por defecto de
+  # scikit-learn.
   algorithms:
-    kmeans: {}
-    agglomerative: {}
+    kmeans:
+      n_init: 10        # nº de inicializaciones aleatorias; se conserva la mejor
+    agglomerative: {}    # enlace 'ward' por defecto
     gaussian_mixture: {}
+  # Reducción por PCA que se evalúa frente a los 7 atributos sin reducir
+  # (fase 04, sección 4.4).
+  pca:
+    variance_target: 0.90                       # nº de componentes = las que acumulan >= 90 % de la varianza
+    representations: ["7_atributos", "pca_2", "pca_4"]
+  # Modelo elegido en la fase 04 (sección 4.6): PCA a 2 dimensiones + k-means
+  # con 3 grupos. Lo usan `src/pipeline.py::train_clustering` y las fases 05-06.
+  final:
+    representation: "pca_2"   # "7_atributos" | "pca_2" | "pca_4"
+    algorithm: "kmeans"       # "kmeans" | "agglomerative" | "gaussian_mixture"
+    k: 3
 
 # --- Validación de los grupos (fase 05) ---
 validation:

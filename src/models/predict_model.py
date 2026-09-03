@@ -1,6 +1,6 @@
 """Asignación de nuevos lotes a un grupo del clustering (fase 05/06).
 
-TODO fase 04/05. Cargará el modelo de clustering guardado en `models/` y
+TODO fase 05/06. Cargará el modelo de clustering guardado en `models/` y
 asignará lotes nuevos al grupo más cercano (donde el algoritmo lo permita,
 p. ej. k-means o gaussian mixture).
 
