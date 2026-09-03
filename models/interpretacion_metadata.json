@@ -1,0 +1,58 @@
+{
+  "n_lotes": 1310,
+  "k": 3,
+  "grupos": [
+    {
+      "grupo": 0,
+      "nombre": "Cafés de puntaje medio, lavados y latinoamericanos",
+      "n_lotes": 708,
+      "puntaje_medio": 82.41,
+      "pct_especialidad": 96.6,
+      "pais_principal": "Colombia",
+      "altitud_media_m": 1344.0,
+      "procesamiento_principal": "Washed / Wet",
+      "silueta": 0.452
+    },
+    {
+      "grupo": 1,
+      "nombre": "Cafés de puntaje más bajo, de fincas bajas y con más defectos",
+      "n_lotes": 295,
+      "puntaje_medio": 78.89,
+      "pct_especialidad": 47.8,
+      "pais_principal": "Mexico",
+      "altitud_media_m": 1230.0,
+      "procesamiento_principal": "Washed / Wet",
+      "silueta": 0.422
+    },
+    {
+      "grupo": 2,
+      "nombre": "Cafés de puntaje alto, de fincas altas y orígenes variados",
+      "n_lotes": 307,
+      "puntaje_medio": 84.8,
+      "pct_especialidad": 99.3,
+      "pais_principal": "Colombia",
+      "altitud_media_m": 1478.0,
+      "procesamiento_principal": "Washed / Wet",
+      "silueta": 0.379
+    }
+  ],
+  "validacion_heredada": {
+    "silueta_pca_2": 0.4279,
+    "silueta_7_atributos": 0.2955,
+    "ari_semillas": 0.9961,
+    "ari_submuestras": 0.9517,
+    "pct_conserva_por_grupo": {
+      "0": 98.7,
+      "1": 98.09,
+      "2": 98.26
+    },
+    "ari_vs_umbral_especialidad": 0.1771
+  },
+  "criterios_negocio": {
+    "Señalar qué condiciones de origen se asocian con los grupos de mejor calidad": "Se cumple",
+    "Señalar qué condiciones de manejo se asocian con los grupos de mejor calidad": "Se cumple parcialmente",
+    "Con respaldo cuantitativo": "Se cumple",
+    "De forma clara para guiar decisiones del sector cafetero": "Se cumple parcialmente",
+    "El dashboard comunica los hallazgos a una audiencia no técnica": "No se cumple todavía"
+  }
+}

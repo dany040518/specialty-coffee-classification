@@ -1,9 +1,10 @@
 """Fachada del pipeline CRISP-DM.
 
 Es el único módulo que los notebooks necesitan importar para ejecutar una
-fase completa de forma reproducible. Hoy cubre las **fases 03** (preparación
-de los datos), **04** (modelado del clustering) y **05** (evaluación de los
-grupos).
+fase completa de forma reproducible. Cubre las **fases 03** (preparación de los
+datos), **04** (modelado del clustering), **05** (evaluación de los grupos) y
+**06** (interpretación y perfilado), en ese orden: cada una lee lo que dejó la
+anterior.
 
 - `prepare_data(config)` reproduce todo lo que el notebook
   `03_preparacion_de_los_datos.ipynb` hace paso a paso: carga → limpieza y
@@ -17,7 +18,13 @@ grupos).
   verificación de reproducibilidad → validación interna en los dos espacios →
   estabilidad ante semillas y submuestras → contraste externo contra
   `Total.Cup.Points >= 80` → guardado de las tablas y del resumen numérico.
-  Las figuras de diagnóstico quedan solo en el notebook, igual que en la fase 04.
+- `interpret_clusters(config)` reproduce el notebook
+  `06_interpretacion_y_resultados.ipynb`: centros en puntos SCA → perfilado por
+  origen, manejo y defectos → dataset plano del tablero → guardado de las tablas
+  y del resumen de la fase.
+
+Las figuras quedan solo en los notebooks: acá se generan los datos, no las
+gráficas.
 """
 
 import json
@@ -44,6 +51,14 @@ from src.models.evaluate_model import (
     silhouette_by_group,
     stability_by_seed,
     stability_by_subsample,
+)
+from src.models.interpret_model import (
+    build_dashboard_dataset,
+    centers_in_points,
+    profile_categorical,
+    profile_defects,
+    profile_numeric,
+    profile_reporting,
 )
 from src.models.train_model import build_representations, fit_final_model, sweep
 
@@ -361,4 +376,165 @@ def evaluate_clustering(config: dict, save: bool = True) -> dict[str, Any]:
         "stability_subsample": stability_subsample,
         "contrast": contrast,
         "evaluation": evaluation,
+    }
+
+
+def interpret_clusters(config: dict, save: bool = True) -> dict[str, Any]:
+    """Ejecuta toda la interpretación de la fase 06.
+
+    Parte de los artefactos de las fases 03 a 05 (`coffee_clustered.csv`,
+    `clustering_scaler.json`, `clustering_metadata.json` y
+    `clustering_evaluation.json`), expresa los centros de los grupos en puntos
+    SCA, los perfila con las variables de origen, manejo y defectos que no
+    entraron al agrupamiento, y arma el dataset plano que consume el tablero.
+
+    A diferencia de las fases anteriores, esta no calcula nada del modelo: solo
+    lee las etiquetas ya validadas y las cruza con el resto de las variables.
+
+    Args:
+        config: contenido de `config/config.yaml`.
+        save: si True, guarda los artefactos en `reports/tables/`,
+            `reports/dashboard/` y `models/`.
+
+    La única tabla de la fase que no se genera acá es
+    `reports/tables/criterios_negocio_cumplidos.csv`, porque la revisión de los
+    criterios es una redacción con evidencia y no un cálculo; si ya existe, se
+    incorpora al resumen de la fase.
+
+    Returns:
+        dict con `centers` (centros en puntos SCA), `categorical` (dict de
+        DataFrames de perfilado por variable), `numeric`, `reporting`, `defects`,
+        `dashboard` (dataset plano) y `metadata` (resumen de la fase).
+    """
+    reference_column = config["validation"]["reference_column"]
+    threshold = config["validation"]["specialty_threshold"]
+    group_names = config["interpretation"]["group_names"]
+
+    processed_dir = resolve_path(config["paths"]["data"]["processed_dir"])
+    models_dir = resolve_path(config["paths"]["models_dir"])
+    coffee = pd.read_csv(processed_dir / "coffee_clustered.csv")
+    X = pd.read_csv(processed_dir / "clustering_input.csv")
+    scaler_params = json.loads(
+        (processed_dir / "clustering_scaler.json").read_text(encoding="utf-8")
+    )
+    metadata = json.loads(
+        (models_dir / "clustering_metadata.json").read_text(encoding="utf-8")
+    )
+    evaluation = json.loads(
+        (models_dir / "clustering_evaluation.json").read_text(encoding="utf-8")
+    )
+
+    labels = coffee["grupo"].to_numpy()
+    groups = sorted(coffee["grupo"].unique())
+
+    # Centros en unidades reales (6.4).
+    centers = centers_in_points(X, labels, scaler_params)
+
+    # Perfilado categórico (6.5). Los nombres de archivo van en español.
+    file_names = {
+        "Country.of.Origin": "paises",
+        "Variety": "variedades",
+        "Processing.Method": "procesamiento",
+        "Color": "color",
+    }
+    profiling_features = config["clustering"]["profiling_features"]
+    categorical_columns = [c for c in profiling_features if coffee[c].dtype == "object"]
+    categorical = {}
+    for column in categorical_columns:
+        categorical[column] = profile_categorical(coffee, column)
+
+    # Perfilado numérico (6.6). `Moisture` se suma a las numéricas del config
+    # porque la fase 03 la dejó como variable de perfilado (notebook 03, 3.11).
+    numeric_columns = [
+        c for c in profiling_features if pd.api.types.is_numeric_dtype(coffee[c])
+    ] + ["Moisture"]
+    numeric = profile_numeric(coffee, numeric_columns)
+
+    # Banderas de reporte (6.7) y defectos (6.8).
+    reporting = profile_reporting(coffee, ["altitude_reportada", "humedad_reportada"])
+    defects = profile_defects(
+        coffee, ["Category.One.Defects", "Category.Two.Defects", "Quakers"]
+    )
+
+    # Dataset plano del tablero (6.12).
+    dashboard = build_dashboard_dataset(coffee, config)
+
+    metadata_fase = {
+        "n_lotes": int(len(coffee)),
+        "k": int(metadata["k"]),
+        "grupos": [],
+        "validacion_heredada": {
+            "silueta_pca_2": evaluation["metricas_pca_2"]["silhouette"],
+            "silueta_7_atributos": evaluation["metricas_7_atributos"]["silhouette"],
+            "ari_semillas": evaluation["estabilidad_semillas"]["ari_medio"],
+            "ari_submuestras": evaluation["estabilidad_submuestras"]["ari_medio"],
+            "pct_conserva_por_grupo": evaluation["estabilidad_asignacion"][
+                "pct_conserva_por_grupo"
+            ],
+            "ari_vs_umbral_especialidad": evaluation["contraste_externo"][
+                "ari_k3_vs_umbral"
+            ],
+        },
+    }
+    for group in groups:
+        subset = coffee[coffee["grupo"] == group]
+        metadata_fase["grupos"].append(
+            {
+                "grupo": int(group),
+                "nombre": group_names[group],
+                "n_lotes": int(len(subset)),
+                "puntaje_medio": float(round(subset[reference_column].mean(), 2)),
+                "pct_especialidad": float(
+                    round((subset[reference_column] >= threshold).mean() * 100, 1)
+                ),
+                "pais_principal": subset["Country.of.Origin"].value_counts().index[0],
+                "altitud_media_m": float(
+                    round(subset["altitude_mean_meters"].dropna().mean(), 0)
+                ),
+                "procesamiento_principal": subset["Processing.Method"]
+                .value_counts()
+                .index[0],
+                "silueta": evaluation["silueta_por_grupo"][str(group)],
+            }
+        )
+
+    # La revisión de los criterios de negocio se redacta en el notebook (sección
+    # 6.10): es un juicio con evidencia, no un cálculo. Si ya está escrita, se
+    # incorpora al resumen para que el JSON de acá y el del notebook coincidan.
+    criteria_path = resolve_path(config["paths"]["reports"]["tables_dir"]) / (
+        "criterios_negocio_cumplidos.csv"
+    )
+    if criteria_path.exists():
+        criteria = pd.read_csv(criteria_path)
+        metadata_fase["criterios_negocio"] = dict(
+            zip(criteria["criterio"], criteria["estado"])
+        )
+
+    if save:
+        tables_dir = resolve_path(config["paths"]["reports"]["tables_dir"])
+        tables_dir.mkdir(parents=True, exist_ok=True)
+        dashboard_dir = resolve_path(config["paths"]["reports"]["dashboard_dir"])
+        dashboard_dir.mkdir(parents=True, exist_ok=True)
+        models_dir.mkdir(parents=True, exist_ok=True)
+
+        for column, table in categorical.items():
+            table.to_csv(
+                tables_dir / f"perfilado_{file_names[column]}_por_grupo.csv", index=False
+            )
+        numeric.to_csv(tables_dir / "perfilado_altitud_humedad_cosecha.csv", index=False)
+        reporting.to_csv(tables_dir / "perfilado_reporte_por_grupo.csv", index=False)
+        defects.to_csv(tables_dir / "perfilado_defectos_por_grupo.csv", index=False)
+        dashboard.to_csv(dashboard_dir / "coffee_dashboard_data.csv", index=False)
+        (models_dir / "interpretacion_metadata.json").write_text(
+            json.dumps(metadata_fase, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+
+    return {
+        "centers": centers,
+        "categorical": categorical,
+        "numeric": numeric,
+        "reporting": reporting,
+        "defects": defects,
+        "dashboard": dashboard,
+        "metadata": metadata_fase,
     }

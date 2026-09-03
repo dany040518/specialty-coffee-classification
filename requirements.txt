@@ -1,13 +1,17 @@
-# Librerías realmente importadas en el proyecto (notebook original + src/),
-# con versiones fijadas según el entorno de desarrollo (pip freeze).
+# Librerías realmente importadas por los notebooks y por src/, con versiones
+# fijadas según el entorno de desarrollo (pip freeze).
+#
+# Nota sobre scikit-learn: `models/clustering_model.joblib` se serializó desde un
+# entorno con la versión 1.9.0, así que al cargarlo con la 1.4.2 que se fija acá
+# aparece un aviso de versión (ver notebook 05, sección 5.3). El modelo carga bien
+# y las etiquetas se reproducen con ARI = 1.0, pero por eso la fase 05 reajusta el
+# modelo en vez de confiar en el objeto serializado.
 numpy==1.26.4
 pandas==2.1.4
 matplotlib==3.7.5
 seaborn==0.13.2
 scikit-learn==1.4.2
 joblib==1.3.2
-xgboost==3.2.0
-imbalanced-learn==0.14.2
 PyYAML==6.0.3
 
 # Necesarias para ejecutar y reproducir los notebooks

@@ -57,7 +57,7 @@ Ver detalle en [`notebooks/01_comprension_del_negocio.ipynb`](notebooks/01_compr
 | 3. Preparación de los datos | [`03_preparacion_de_los_datos.ipynb`](notebooks/03_preparacion_de_los_datos.ipynb) | Completo — limpieza paso a paso, decisión de alcance (solo arabica), reducción de variables, análisis de redundancia (correlación y V de Cramér), imputación de perfilado y construcción de la matriz de entrada estandarizada. |
 | 4. Modelado | [`04_modelado.ipynb`](notebooks/04_modelado.ipynb) | Completo — comparación de representaciones (7 atributos vs. PCA) × algoritmos (k-means, aglomerativo, gaussian mixture) × número de grupos, y ajuste del modelo final. |
 | 5. Evaluación | [`05_evaluacion.ipynb`](notebooks/05_evaluacion.ipynb) | Completo — verificación de reproducibilidad, validación interna en los dos espacios (`pca_2` y los 7 atributos), estabilidad ante 20 semillas y 50 submuestras del 80 % (ARI), estabilidad de la asignación lote a lote, contraste externo contra `Total.Cup.Points >= 80`, revisión de por qué k = 3 y no k = 2, y contraste con los criterios de éxito de la fase 1. |
-| 6. Interpretación y resultados | [`06_interpretacion_y_resultados.ipynb`](notebooks/06_interpretacion_y_resultados.ipynb) | **Pendiente** — perfilado de cada grupo por origen y manejo, limitaciones y export a `reports/dashboard/`. |
+| 6. Interpretación y resultados | [`06_interpretacion_y_resultados.ipynb`](notebooks/06_interpretacion_y_resultados.ipynb) | Completo — centros de los grupos en puntos SCA, perfilado por país, variedad, procesamiento, color, altitud, humedad, cosecha y defectos, descripción en lenguaje llano de los tres grupos, revisión de los criterios de negocio y export del dataset plano a `reports/dashboard/`. |
 
 Cada notebook lee lo que dejó el anterior. La lógica reutilizable vive en `src/`
 (funciones planas, sin clases base ni jerarquías), orquestada por
@@ -76,118 +76,21 @@ elegido) salen de `config/config.yaml`, no de valores fijos en los notebooks.
 - **Sobre k = 2 (corregido en la fase 5):** la fase 4 había justificado el descarte de k = 2 diciendo que solo reproduce lo que ya dice el umbral de 80 puntos. La fase 5 lo midió y no es así: el ARI de k = 2 contra la binaria de 80 puntos es 0.155, incluso más bajo que el de k = 3 (0.177). Ninguna de las dos particiones reproduce la convención. Lo que sostiene la decisión es que k = 3 aísla en un grupo a 154 de los 180 lotes que no llegan a 80 puntos y deja además dos tramos distinguibles por encima del umbral.
 - **PCA guardado (fase 5):** la fase 4 guardó el k-means pero no el PCA sobre el que se ajustó, así que el modelo serializado no servía para lotes nuevos. La fase 5 lo reconstruye y lo guarda en `models/clustering_pca.joblib`.
 
-## Estructura del repositorio
+## El modelo (fase 04)
 
-```
-.
-├── config/
-│   └── config.yaml            # semilla (42), rutas, columnas, algoritmos, modelo elegido
-├── data/
-│   ├── raw/                   # datos originales de CQI, sin modificar
-│   ├── interim/               # sin uso en esta iteración
-│   ├── processed/             # clustering_input.csv, coffee_clean.csv, clustering_scaler.json,
-│   │                          #   coffee_clustered.csv  (generados por 03 y 04)
-│   └── external/              # sin uso
-├── models/                    # clustering_model.joblib + clustering_metadata.json (fase 04),
-│                              #   clustering_pca.joblib + clustering_evaluation.json (fase 05)
-├── notebooks/
-│   ├── 01_comprension_del_negocio.ipynb
-│   ├── 02_comprension_de_los_datos.ipynb
-│   ├── 03_preparacion_de_los_datos.ipynb
-│   ├── 04_modelado.ipynb
-│   ├── 05_evaluacion.ipynb
-│   └── 06_interpretacion_y_resultados.ipynb  # pendiente
-├── reports/
-│   ├── figures/               # gráficas .png — EDA (fase 02), PCA y clustering (fase 04),
-│   │                          #   diagnóstico de la evaluación (fase 05)
-│   ├── tables/                # clustering_comparison.csv (fase 04) + evaluacion_interna.csv,
-│   │                          #   estabilidad.csv, contraste_externo.csv (fase 05)
-│   └── dashboard/             # dataset plano para Power BI / Tableau (pendiente, fase 06)
-├── src/
-│   ├── config.py             # carga config/config.yaml y resuelve rutas relativas al repo
-│   ├── utils.py              # utilidades genéricas (p. ej. resumen de nulos)
-│   ├── pipeline.py           # fachada: prepare_data (03), train_clustering (04), evaluate_clustering (05)
-│   ├── data/
-│   │   ├── load_data.py      # carga de los CSV crudos de CQI
-│   │   └── clean_data.py     # limpieza: registro corrupto, columnas, altitud, Moisture, texto
-│   ├── features/
-│   │   └── build_features.py # imputación de perfilado y matriz de clustering estandarizada
-│   ├── models/
-│   │   ├── train_model.py    # representaciones, barrido rep × algoritmo × k, modelo final
-│   │   ├── evaluate_model.py # validación interna, estabilidad (ARI) y contraste externo
-│   │   └── predict_model.py  # asignación de lotes nuevos a un grupo (pendiente, fase 06)
-│   └── visualization/
-│       └── plots.py          # gráficas reutilizables de EDA
-├── README.md
-├── requirements.txt
-└── .gitignore
-```
-
-**Arquitectura:** capas `data → features → models → visualization` como módulos de
-funciones planas (sin `base.py` ni ABCs), orquestadas por `src/pipeline.py`.
-`prepare_data(config)` reproduce toda la fase 03, `train_clustering(config)` toda
-la fase 04 y `evaluate_clustering(config)` toda la fase 05, cada una en una sola
-llamada y con los mismos artefactos que producen los notebooks (las figuras se
-generan solo en los notebooks).
-
-## Instrucciones de ejecución
-
-```bash
-# 1. Clonar el repositorio
-git clone <URL_DEL_REPOSITORIO>
-cd specialty-coffee-classification
-
-# 2. Crear y activar un entorno virtual
-python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-
-# 3. Instalar dependencias
-pip install -r requirements.txt
-
-# 4. Ejecutar los notebooks en orden (cada uno lee lo que dejó el anterior)
-jupyter notebook notebooks/01_comprension_del_negocio.ipynb
-jupyter notebook notebooks/02_comprension_de_los_datos.ipynb
-jupyter notebook notebooks/03_preparacion_de_los_datos.ipynb
-jupyter notebook notebooks/04_modelado.ipynb
-jupyter notebook notebooks/05_evaluacion.ipynb
-
-# También, de punta a punta y sin abrir Jupyter:
-# jupyter nbconvert --to notebook --execute --inplace notebooks/0{2,3,4,5}_*.ipynb
-```
-
-Las fases 03, 04 y 05 también se pueden correr desde código:
-
-```python
-from src.config import load_config
-from src.pipeline import prepare_data, train_clustering, evaluate_clustering
-
-config = load_config()
-prepare_data(config)         # -> data/processed/
-train_clustering(config)     # -> models/, data/processed/coffee_clustered.csv, reports/tables/
-evaluate_clustering(config)  # -> models/clustering_evaluation.json, clustering_pca.joblib, reports/tables/
-```
-
-## Resultados preliminares (fase 04)
-
-Modelo final: PCA a 2 dimensiones + k-means con k = 3, sobre los 1310 lotes de
-arabica. Métricas internas (`models/clustering_metadata.json`):
+Modelo final: PCA a 2 dimensiones + k-means con **k = 3**, sobre los 1310 lotes de
+arabica, con semilla 42. Métricas internas (`models/clustering_metadata.json`):
 
 | Métrica | Valor | Lectura |
 |---|---|---|
 | Coeficiente de silueta | 0.428 | Separación moderada. El espacio sensorial está dominado por un solo eje (calidad general), así que los grupos son tres tramos de un continuo más que nubes aisladas. |
-| Davies-Bouldin | 0.761 | — (más bajo es mejor) |
-| Calinski-Harabasz | 1506 | — (más alto es mejor) |
+| Davies-Bouldin | 0.761 | Más bajo es mejor. |
+| Calinski-Harabasz | 1506 | Más alto es mejor. |
 
-Perfil de los tres grupos (los nombres son descriptivos, a confirmar en la fase 06):
-
-| Grupo | n | `Total.Cup.Points` medio | Altitud media (m) | % ≥ 80 pts | Orígenes más frecuentes |
-|---|---|---|---|---|---|
-| 2 — calidad alta | 307 | 84.8 | 1478 | 99 % | Colombia, Etiopía, Guatemala |
-| 0 — calidad media | 708 | 82.4 | 1344 | 97 % | Colombia, México, Guatemala |
-| 1 — calidad más baja | 295 | 78.9 | 1230 | 48 % | México, Guatemala, Taiwán |
-
-> El perfilado detallado por origen y manejo (fase 06) sigue pendiente. La
-> validación de estos grupos está en la sección siguiente.
+Los tamaños de los grupos son 708, 295 y 307 lotes. Qué contiene cada uno se
+describe más abajo, en los resultados de la fase 06; el barrido completo de
+representación × algoritmo × k está en
+[`reports/tables/clustering_comparison.csv`](reports/tables/clustering_comparison.csv).
 
 ## Resultados de la evaluación (fase 05)
 
@@ -212,24 +115,193 @@ El criterio de negocio (qué condiciones de origen y manejo se asocian con los
 grupos de mejor calidad, y el dashboard) todavía no se puede evaluar: depende de la
 fase 06.
 
+## Los tres grupos de cafés (fase 06)
+
+| Grupo | Nombre | n | Puntaje medio | % ≥ 80 | Altitud media | Origen principal | Rasgo que lo distingue |
+|---|---|---|---|---|---|---|---|
+| 0 | Cafés de puntaje medio, lavados y latinoamericanos | 708 | 82.4 | 96.6 % | 1344 m | Colombia 18 %, México 17 %, Guatemala 14 % | Es el grueso de la base; llega tan limpio como el grupo 2 pero puntúa medio punto menos en todos los atributos |
+| 1 | Cafés de puntaje más bajo, de fincas bajas y con más defectos | 295 | 78.9 | 47.8 % | 1230 m | México 32 %, Guatemala 16 % | El único donde la mayoría no llega a 80 puntos, y el único con más defectos: 5.71 de categoría dos por lote contra 3.09 y 2.72 |
+| 2 | Cafés de puntaje alto, de fincas altas y orígenes variados | 307 | 84.8 | 99.3 % | 1478 m | Colombia 16 %, Etiopía 12 %, Guatemala 12 % | El más internacional y el de fincas más altas; menos lavado (52 %) y más natural (24 %) que los demás |
+
+Los tres grupos quedan ordenados igual en los siete atributos de catación, sin
+una sola excepción, lo que confirma que se separan por nivel general de la taza y
+no por un perfil de sabor distinto. Detalle completo en
+[`06_interpretacion_y_resultados.ipynb`](notebooks/06_interpretacion_y_resultados.ipynb),
+sección 6.9, y en las tablas de `reports/tables/perfilado_*.csv`.
+
 ## Dashboard
 
 El dashboard (Power BI o Tableau) se construye por fuera de este repositorio y se
-alimentará de un dataset plano (grupo de cada lote + sus características) que
-generará la fase 06 en `reports/dashboard/`.
+alimenta de [`reports/dashboard/coffee_dashboard_data.csv`](reports/dashboard/coffee_dashboard_data.csv),
+que genera la fase 06: **1310 filas** (un lote por fila) × 27 columnas, con las
+variables de origen y manejo, el grupo de cada lote, su nombre descriptivo
+(`grupo_nombre`), la marca de especialidad (`especialidad`) y el tramo de puntaje
+(`rango_puntaje`).
 
-> TODO: una vez publicado, agregar aquí el enlace/captura y describir qué vistas contiene.
+Las vistas sugeridas en la sección 6.12 del notebook 06: un mapa por país con el
+tamaño según la cantidad de lotes y el color según el grupo predominante; un
+gráfico de altitud contra puntaje coloreado por grupo, que muestra a la vez la
+tendencia y el solape entre grupos; barras apiladas con la composición de cada
+grupo por procesamiento y variedad, dejando `Desconocido` a la vista; y una
+tarjeta por grupo con su nombre, cantidad de lotes, puntaje promedio y porcentaje
+de especialidad.
 
-## Limitaciones y trabajo futuro
+> Cuando el tablero esté publicado va acá el enlace, con una captura y la descripción de sus vistas.
 
-- La base de datos solo incluye cafés que buscaron una certificación de calidad de CQI, así que no representa a todo el café que se produce; el **86.3 %** de los lotes ya supera los 80 puntos. El "grupo de calidad más baja" lo es dentro de esta base, no dentro del café del mundo.
-- Se trabajó solo con arabica; robusta quedó fuera por formulario de catación distinto, alta nulidad y tamaño (28 filas).
-- La separación entre grupos es moderada (silueta 0.43 en `pca_2` y **0.30** en el espacio de los 7 atributos, donde los grupos tienen que interpretarse) porque los atributos sensoriales están muy correlacionados: casi toda la variación cabe en un eje de calidad general. El agrupamiento se usa como base **descriptiva**, no como una frontera nítida.
-- Los grupos no equivalen a la categoría de especialidad: el corte de 80 puntos parte al grupo 1 casi por la mitad y no coincide con ninguna frontera del modelo (fase 5, sección 5.8).
-- Los 32 lotes que quedan en las fronteras entre tramos cambian de grupo según la muestra (fase 5, sección 5.7). La partición es estable, esos lotes no.
-- Lo que la fase 5 validó son los grupos, no el perfilado: las asociaciones con país, variedad o altitud que salgan en la fase 6 son descriptivas y no admiten lectura causal.
-- Hay países y variedades con muy pocos lotes; las conclusiones sobre ellos en la fase 06 deben tomarse con cautela.
-- Falta la fase 06 (interpretación, perfilado por origen y manejo, y dashboard).
+## Limitaciones y consideraciones
+
+Lo primero que hay que saber al leer cualquier resultado de este proyecto es de
+dónde salen los datos. La base del CQI reúne cafés que fueron enviados a
+certificar, no una muestra del café que se produce en el mundo, y eso se nota en
+que el 86.3 % de los lotes ya superaba los 80 puntos antes de que empezáramos.
+Por eso el grupo de menor puntaje no es "café malo": es el tramo más bajo de un
+conjunto que de entrada ya estaba por encima del promedio, y casi la mitad de sus
+lotes igual califica como especialidad. Todo esto vale además solo para arabica,
+porque robusta quedó fuera desde la fase 03 por usar otro formulario de catación
+y aportar apenas 28 registros.
+
+La segunda consideración es sobre qué tipo de afirmación permiten estos números.
+Que el grupo de mejor puntaje tenga más Colombia, más Etiopía y 250 metros más de
+altura promedio es una diferencia medible, pero no demuestra que sembrar allí o a
+esa altura produzca mejor café. Lo que hay son lotes reales con su suelo, su
+clima, su variedad, su manejo poscosecha y el catador que les tocó, todo junto y
+sin separar; nadie sembró el mismo café a dos alturas distintas para comparar.
+Los rangos de altitud, de hecho, se solapan casi por completo entre los tres
+grupos, así que de acá sale un mapa de qué se parece a qué y no una regla del
+tipo "siembre por encima de tal altura".
+
+La tercera tiene que ver con la forma de los grupos. Los siete atributos de
+catación están tan correlacionados que casi toda la variación entre lotes cabe en
+un solo eje, el de calidad general, y por eso los grupos son tres tramos de un
+continuo y no nubes separadas. Eso explica que la silueta sea moderada (0.43, y
+0.30 en el espacio de los siete atributos) y que las fronteras entre grupos las
+haya puesto el algoritmo: unos 32 lotes cambian de grupo según la muestra con la
+que se corra. Los grupos son estables (ARI de 0.996 al cambiar la semilla y 0.952
+con submuestras del 80 %), que es distinto de decir que tres sea el número
+verdadero de perfiles de café que existen. Es una descripción repetible con estos
+datos y este algoritmo, y conviene presentarla como niveles de calidad y no como
+categorías cerradas.
+
+Dos precisiones más que conviene tener a mano. Los grupos no equivalen a la
+categoría de especialidad: el corte de 80 puntos parte al grupo 1 casi por la
+mitad y no coincide con ninguna frontera del modelo, con un ARI de solo 0.18
+entre las dos particiones. Y hay países y variedades con muy pocos lotes, así que
+cualquier lectura sobre ellos, sobre todo en el tablero, tiene que mostrar el `n`
+al lado del porcentaje.
+
+## Trabajo pendiente
+
+- Construir el tablero en Power BI o Tableau a partir de `reports/dashboard/coffee_dashboard_data.csv`, y enlazarlo desde este README. Es la única exigencia de la fase 01 que sigue abierta.
+- Preparar la sustentación con las descripciones de la sección 6.9 y la tabla de criterios de 6.10.
+- Si el proyecto continuara: traer variables de manejo que esta base no tiene (fertilización, edad del cultivo, fecha de recolección, tiempos de fermentación) y lotes que no hayan pasado por el filtro de la certificación. Con los datos actuales, este es el techo del análisis.
+
+## Estructura del repositorio
+
+```
+.
+├── config/
+│   └── config.yaml            # semilla (42), rutas, columnas, algoritmos, modelo elegido,
+│                              #   parámetros de estabilidad y nombres de los grupos
+├── data/
+│   ├── raw/                   # datos originales de CQI, sin modificar
+│   ├── interim/               # sin uso en esta iteración
+│   ├── processed/             # clustering_input.csv, coffee_clean.csv, clustering_scaler.json,
+│   │                          #   coffee_clustered.csv  (generados por 03 y 04)
+│   └── external/              # sin uso
+├── models/                    # clustering_model.joblib + clustering_metadata.json (fase 04),
+│                              #   clustering_pca.joblib + clustering_evaluation.json (fase 05),
+│                              #   interpretacion_metadata.json (fase 06)
+├── notebooks/
+│   ├── 01_comprension_del_negocio.ipynb
+│   ├── 02_comprension_de_los_datos.ipynb
+│   ├── 03_preparacion_de_los_datos.ipynb
+│   ├── 04_modelado.ipynb
+│   ├── 05_evaluacion.ipynb
+│   └── 06_interpretacion_y_resultados.ipynb
+├── reports/
+│   ├── figures/               # gráficas .png — EDA (fase 02), PCA y clustering (fase 04),
+│   │                          #   diagnóstico de la evaluación (fase 05), perfilado (fase 06)
+│   ├── tables/                # clustering_comparison.csv (fase 04) + evaluacion_interna.csv,
+│   │                          #   estabilidad.csv, contraste_externo.csv (fase 05) +
+│   │                          #   las tablas de perfilado y criterios de negocio (fase 06)
+│   └── dashboard/             # coffee_dashboard_data.csv, el dataset plano para Power BI / Tableau
+├── src/
+│   ├── config.py             # carga config/config.yaml y resuelve rutas relativas al repo
+│   ├── utils.py              # utilidades genéricas (p. ej. resumen de nulos)
+│   ├── pipeline.py           # fachada: prepare_data (03), train_clustering (04),
+│   │                         #   evaluate_clustering (05), interpret_clusters (06)
+│   ├── data/
+│   │   ├── load_data.py      # carga de los CSV crudos de CQI
+│   │   └── clean_data.py     # limpieza: registro corrupto, columnas, altitud, Moisture, texto
+│   ├── features/
+│   │   └── build_features.py # imputación de perfilado y matriz de clustering estandarizada
+│   ├── models/
+│   │   ├── train_model.py    # representaciones, barrido rep × algoritmo × k, modelo final
+│   │   ├── evaluate_model.py # validación interna, estabilidad (ARI) y contraste externo
+│   │   ├── interpret_model.py # centros en puntos SCA, perfilado por grupo y dataset del tablero
+│   │   └── predict_model.py  # asigna lotes nuevos a un grupo (scaler -> PCA -> k-means)
+│   └── visualization/
+│       └── plots.py          # gráficas reutilizables de EDA y de perfilado por grupo
+├── README.md
+├── requirements.txt
+└── .gitignore
+```
+
+**Arquitectura:** capas `data → features → models → visualization` como módulos de
+funciones planas (sin `base.py` ni ABCs), orquestadas por `src/pipeline.py`.
+Cada fase con código tiene una función que la reproduce entera en una sola
+llamada: `prepare_data` (03), `train_clustering` (04), `evaluate_clustering` (05)
+e `interpret_clusters` (06). Los artefactos que generan son idénticos a los de
+los notebooks; las figuras se generan solo en los notebooks.
+
+## Instrucciones de ejecución
+
+```bash
+# 1. Clonar el repositorio
+git clone <URL_DEL_REPOSITORIO>
+cd specialty-coffee-classification
+
+# 2. Crear y activar un entorno virtual
+python -m venv venv
+source venv/bin/activate          # Windows: venv\Scripts\activate
+
+# 3. Instalar dependencias
+pip install -r requirements.txt
+
+# 4. Ejecutar los notebooks en orden (cada uno lee lo que dejó el anterior)
+jupyter notebook notebooks/01_comprension_del_negocio.ipynb
+jupyter notebook notebooks/02_comprension_de_los_datos.ipynb
+jupyter notebook notebooks/03_preparacion_de_los_datos.ipynb
+jupyter notebook notebooks/04_modelado.ipynb
+jupyter notebook notebooks/05_evaluacion.ipynb
+jupyter notebook notebooks/06_interpretacion_y_resultados.ipynb
+
+# También, de punta a punta y sin abrir Jupyter:
+# jupyter nbconvert --to notebook --execute --inplace notebooks/0{2,3,4,5,6}_*.ipynb
+```
+
+Las fases 03 a 06 también se pueden correr desde código, sin abrir un notebook:
+
+```python
+from src.config import load_config
+from src.pipeline import (prepare_data, train_clustering,
+                          evaluate_clustering, interpret_clusters)
+
+config = load_config()
+prepare_data(config)         # -> data/processed/
+train_clustering(config)     # -> models/, data/processed/coffee_clustered.csv, reports/tables/
+evaluate_clustering(config)  # -> models/clustering_evaluation.json, clustering_pca.joblib, reports/tables/
+interpret_clusters(config)   # -> reports/tables/perfilado_*.csv, reports/dashboard/, models/
+```
+
+Y para asignar lotes nuevos a un grupo, sin volver a entrenar nada:
+
+```python
+from src.models.predict_model import assign_new_lotes
+
+# df_nuevos: un DataFrame con los 7 atributos de catación en puntos SCA
+assign_new_lotes(df_nuevos, config)   # devuelve el mismo DataFrame con la columna 'grupo'
+```
 
 ## Autoras
 

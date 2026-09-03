@@ -1,0 +1,10 @@
+variable,grupo,n_reporta,n_grupo,pct_reporta,media,desviacion,minimo,maximo
+altitude_mean_meters,0,572,708,80.8,1343.66,348.65,350.0,2527.0
+altitude_mean_meters,1,231,295,78.3,1229.71,303.05,250.0,1859.28
+altitude_mean_meters,2,229,307,74.6,1478.09,375.44,250.5,2560.0
+Harvest.Year,0,673,708,95.1,2013.75,1.79,2009.0,2018.0
+Harvest.Year,1,284,295,96.3,2013.42,1.57,2009.0,2017.0
+Harvest.Year,2,290,307,94.5,2013.29,2.0,2009.0,2017.0
+Moisture,0,568,708,80.2,0.11,0.02,0.01,0.28
+Moisture,1,259,295,87.8,0.12,0.02,0.01,0.18
+Moisture,2,231,307,75.2,0.1,0.03,0.01,0.2

@@ -140,3 +140,22 @@ validation:
     n_seeds: 20              # nº de resiembras de k-means para medir cuánto cambian los grupos
     n_subsamples: 50         # nº de submuestras aleatorias
     subsample_fraction: 0.8  # proporción de lotes en cada submuestra
+
+# --- Interpretación de los grupos (fase 06) ---
+# Lo único de esta fase que es una decisión editorial y no un cálculo: cómo se
+# llama cada grupo. Los nombres salen de leer el perfilado (notebook 06, sección
+# 6.9) y viven acá para que el notebook, el módulo y el dashboard digan lo mismo.
+# Las claves son las etiquetas que asignó k-means, que son arbitrarias: si se
+# reentrena el modelo con otra configuración, hay que revisarlos.
+interpretation:
+  group_names:
+    0: "Cafés de puntaje medio, lavados y latinoamericanos"
+    1: "Cafés de puntaje más bajo, de fincas bajas y con más defectos"
+    2: "Cafés de puntaje alto, de fincas altas y orígenes variados"
+  # Ancho en puntos SCA de los tramos de `rango_puntaje` en el dataset del
+  # dashboard. Los cortes se arman alrededor de validation.specialty_threshold:
+  # dos tramos por debajo y dos por encima.
+  score_band_width: 4
+  # Cuántos valores se muestran por grupo en las tablas y figuras de perfilado
+  # categórico (las tablas guardadas en reports/tables/ van completas).
+  top_n_profiling: 6

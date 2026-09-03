@@ -1,9 +1,10 @@
-"""Funciones de visualización reutilizables (EDA de las fases 02 y 03).
+"""Funciones de visualización reutilizables (EDA de las fases 02 y 03, y
+perfilado de los grupos en la fase 06).
 
-Distribuciones, mapas de nulos, matrices de correlación y grillas de
-boxplots/histogramas. Cada función guarda su figura en `reports/figures/`
-(ruta resuelta vía `config.yaml`) y también la devuelve, para mostrarla
-inline en el notebook.
+Distribuciones, mapas de nulos, matrices de correlación, grillas de
+boxplots/histogramas y barras de perfilado por grupo. Cada función guarda su
+figura en `reports/figures/` (ruta resuelta vía `config.yaml`) y también la
+devuelve, para mostrarla inline en el notebook.
 """
 
 from pathlib import Path
@@ -121,6 +122,59 @@ def plot_boxplots(
         ax.set_ylabel("")
     for ax in axes[len(cols):]:
         ax.set_visible(False)
+    fig.tight_layout()
+    _save(fig, config, filename)
+    return fig
+
+
+# --- Fase 06: perfilado de los grupos --------------------------------------------
+
+
+def plot_profiling_categorical(
+    df: pd.DataFrame,
+    column: str,
+    group_column: str,
+    config: dict,
+    filename: str,
+    top_n: int = 8,
+    title: str | None = None,
+) -> plt.Figure:
+    """Barras de los valores más frecuentes de una variable categórica, un panel
+    por grupo del clustering.
+
+    Sirve para las cuatro variables de perfilado categóricas de la fase 06 (país,
+    variedad, método de procesamiento y color). Las barras están en porcentaje
+    **dentro de cada grupo**, no en conteo, porque los grupos tienen tamaños muy
+    distintos (708, 295 y 307 lotes) y comparar conteos daría una lectura falsa.
+
+    Args:
+        df: dataset con la columna de grupo y la variable a perfilar.
+        column: variable categórica que se quiere perfilar.
+        group_column: columna con el grupo de cada lote (normalmente `grupo`).
+        config: contenido de `config/config.yaml`.
+        filename: nombre del .png dentro de `reports/figures/`.
+        top_n: cuántos valores mostrar en cada panel.
+        title: título de la figura; si no se pasa, se arma con el nombre de la columna.
+
+    Returns:
+        La figura, para mostrarla inline en el notebook.
+    """
+    groups = sorted(df[group_column].unique())
+    fig, axes = plt.subplots(1, len(groups), figsize=(5 * len(groups), 4.5), sharex=True)
+    axes = np.atleast_1d(axes)
+
+    for ax, group in zip(axes, groups):
+        subset = df[df[group_column] == group]
+        percentages = subset[column].value_counts(normalize=True).head(top_n) * 100
+        # Se invierte el orden para que el valor más frecuente quede arriba.
+        ax.barh(percentages.index.astype(str)[::-1], percentages.values[::-1],
+                color=plt.cm.tab10(group))
+        ax.set_title(f"grupo {group} (n = {len(subset)})")
+        ax.set_xlabel("% de lotes del grupo")
+        for y, value in enumerate(percentages.values[::-1]):
+            ax.text(value + 0.5, y, f"{value:.1f} %", va="center", fontsize=8)
+
+    fig.suptitle(title or f"{column} por grupo (top {top_n} de cada grupo)")
     fig.tight_layout()
     _save(fig, config, filename)
     return fig
