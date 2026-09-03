@@ -1,7 +1,5 @@
 """Carga de la configuración central del proyecto (config/config.yaml).
 
-Todos los notebooks y módulos de src/ deben obtener rutas, semilla e
-hiperparámetros a través de `load_config`, en vez de hardcodear valores.
 """
 
 from pathlib import Path
