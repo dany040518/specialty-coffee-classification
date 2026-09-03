@@ -1,0 +1,63 @@
+{
+  "representacion": "pca_2",
+  "algoritmo": "kmeans",
+  "k": 3,
+  "random_seed": 42,
+  "n_lotes": 1310,
+  "reproducibilidad_ari": 1.0,
+  "metricas_pca_2": {
+    "silhouette": 0.4279,
+    "davies_bouldin": 0.7608,
+    "calinski_harabasz": 1505.9
+  },
+  "metricas_7_atributos": {
+    "silhouette": 0.2955,
+    "davies_bouldin": 1.0878,
+    "calinski_harabasz": 812.0
+  },
+  "silueta_por_grupo": {
+    "0": 0.452,
+    "1": 0.422,
+    "2": 0.379
+  },
+  "estabilidad_semillas": {
+    "n_seeds": 20,
+    "ari_medio": 0.9961,
+    "ari_minimo": 0.9877,
+    "ari_maximo": 1.0
+  },
+  "estabilidad_submuestras": {
+    "n_subsamples": 50,
+    "subsample_fraction": 0.8,
+    "ari_medio": 0.9517,
+    "ari_desviacion": 0.058,
+    "ari_minimo": 0.777,
+    "ari_maximo": 0.9969
+  },
+  "estabilidad_asignacion": {
+    "pct_conserva_medio": 98.44,
+    "pct_conserva_por_grupo": {
+      "0": 98.7,
+      "1": 98.09,
+      "2": 98.26
+    },
+    "lotes_inestables_bajo_80pct": 32
+  },
+  "contraste_externo": {
+    "columna": "Total.Cup.Points",
+    "umbral": 80,
+    "pct_global_especialidad": 86.3,
+    "ari_k3_vs_umbral": 0.1771,
+    "ari_k2_vs_umbral": 0.1551,
+    "puntaje_medio_por_grupo": {
+      "0": 82.41,
+      "1": 78.89,
+      "2": 84.8
+    },
+    "pct_especialidad_por_grupo": {
+      "0": 96.6,
+      "1": 47.8,
+      "2": 99.3
+    }
+  }
+}

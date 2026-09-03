@@ -135,3 +135,8 @@ validation:
   # obtenidos contra la convención de la industria (café de especialidad).
   reference_column: "Total.Cup.Points"
   specialty_threshold: 80
+  # Parámetros de las pruebas de estabilidad (fase 05, secciones 5.5-5.7).
+  stability:
+    n_seeds: 20              # nº de resiembras de k-means para medir cuánto cambian los grupos
+    n_subsamples: 50         # nº de submuestras aleatorias
+    subsample_fraction: 0.8  # proporción de lotes en cada submuestra
