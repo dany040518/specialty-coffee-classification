@@ -1,6 +1,6 @@
 # Presentación de sustentación
 
-Diapositivas del proyecto (16), en HTML. El guion hablado está en `guion.md`.
+Diapositivas del proyecto (16), en HTML.
 
 | Archivo | Qué es |
 |---|---|
