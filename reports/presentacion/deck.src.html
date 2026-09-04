@@ -1,0 +1,809 @@
+<title>Segmentación de Cafés de Especialidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --s:1;
+  --paper:#f7f6f1; --panel:#efede4; --panel-2:#e7e4d8;
+  --ink:#1b241e; --ink-2:#49524a; --faint:#7c847b;
+  --rule:#d8d6ca;
+  --accent:#3c6b4d; --accent-ink:#2f5a3e; --accent-deep:#24422f;
+  --clay:#b06a34;
+  --g-low:#b9793a; --g-mid:#4f7d57; --g-high:#2f5d3f;
+  --shadow:0 1px 0 rgba(27,36,30,.04), 0 18px 40px -24px rgba(27,36,30,.28);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#141a15; --panel:#1d2620; --panel-2:#232d26;
+    --ink:#ece9de; --ink-2:#b4b9ad; --faint:#899085;
+    --rule:#323b33;
+    --accent:#7bba8d; --accent-ink:#93cda4; --accent-deep:#a9d6b5;
+    --clay:#d99a63;
+    --g-low:#d7a066; --g-mid:#83b98a; --g-high:#63a97b;
+    --shadow:0 1px 0 rgba(0,0,0,.2), 0 20px 44px -24px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141a15; --panel:#1d2620; --panel-2:#232d26;
+  --ink:#ece9de; --ink-2:#b4b9ad; --faint:#899085;
+  --rule:#323b33;
+  --accent:#7bba8d; --accent-ink:#93cda4; --accent-deep:#a9d6b5;
+  --clay:#d99a63;
+  --g-low:#d7a066; --g-mid:#83b98a; --g-high:#63a97b;
+  --shadow:0 1px 0 rgba(0,0,0,.2), 0 20px 44px -24px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.viewport{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%), var(--paper);
+}
+.stage{
+  width:1280px;height:720px;flex:none;transform:scale(var(--s));transform-origin:center;
+  position:relative;background:var(--paper);border:1px solid var(--rule);box-shadow:var(--shadow);overflow:hidden;
+}
+.slide{
+  position:absolute;inset:0;padding:46px 76px 58px;
+  display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s ease;
+}
+.slide.active{opacity:1;pointer-events:auto}
+@media (prefers-reduced-motion:reduce){.slide,.progress{transition:none}}
+
+/* template motifs */
+.hills{position:absolute;right:0;bottom:0;width:360px;height:150px;z-index:0;pointer-events:none}
+.branch{position:absolute;left:-14px;top:44px;width:120px;height:340px;z-index:0;pointer-events:none;color:var(--accent);opacity:.16}
+.bean{position:absolute;top:20px;right:32px;width:24px;height:24px;color:var(--faint);opacity:.5;z-index:2}
+.slide > .eyebrow,.slide > .title,.slide > .body-wrap{position:relative;z-index:1}
+
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);
+  display:flex;align-items:center;gap:12px;flex:none;padding-right:36px;
+}
+.eyebrow::after{content:"";height:1px;flex:1;background:var(--rule)}
+
+.title{
+  font-family:"Spectral",Georgia,serif;font-weight:600;font-size:34px;line-height:1.15;
+  letter-spacing:-.01em;margin:12px 0 0;max-width:32ch;text-wrap:balance;color:var(--ink);flex:none;
+}
+.lead{font-size:17.5px;line-height:1.55;color:var(--ink-2);max-width:72ch;margin:0}
+.lead .hi{color:var(--ink);font-weight:600}
+.body-wrap{margin-top:14px;display:flex;flex-direction:column;gap:16px;min-height:0;flex:1;justify-content:center}
+
+.points{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.points li{position:relative;padding-left:22px;font-size:16.5px;line-height:1.5;color:var(--ink);max-width:78ch}
+.points li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;background:var(--accent);border-radius:1px}
+.points li b{font-weight:600}
+.points.tight li{font-size:14.5px;line-height:1.45}
+.points.tight{gap:8px}
+.ref{font-size:.7em;vertical-align:super;color:var(--accent-ink);font-family:"IBM Plex Mono",monospace;font-weight:600;letter-spacing:0}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;min-height:0}
+.cols.w{grid-template-columns:1.1fr .9fr}
+.cols h3,.subh{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);margin:0 0 9px;
+}
+
+.media{display:grid;gap:32px;align-items:center;min-height:0}
+.media.imgL{grid-template-columns:1.35fr .85fr}
+.media.imgR{grid-template-columns:.85fr 1.35fr}
+.figframe{background:var(--panel);border:1px solid var(--rule);padding:10px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.figframe img{width:100%;height:auto;max-height:480px;object-fit:contain;display:block;background:#fff;border-radius:2px}
+.figframe figcaption{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);letter-spacing:.02em;line-height:1.4}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.stat{background:var(--panel);border:1px solid var(--rule);padding:18px;display:flex;flex-direction:column;gap:6px}
+.stat .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:40px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat .v small{font-size:18px}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--faint)}
+.stat .n{font-size:13.5px;line-height:1.4;color:var(--ink-2)}
+
+table.data{border-collapse:collapse;width:100%;font-size:14px}
+table.data caption{caption-side:bottom;text-align:left;margin-top:9px;font-size:12px;color:var(--faint);line-height:1.4}
+table.data th{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--faint);text-align:left;padding:0 12px 7px 0;border-bottom:1px solid var(--rule);vertical-align:bottom;
+}
+table.data td{padding:7px 12px 7px 0;border-bottom:1px solid var(--rule);color:var(--ink-2);vertical-align:top;line-height:1.34}
+table.data td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+table.data td.lead-cell{color:var(--ink);font-weight:500}
+table.data tr:last-child td{border-bottom:0}
+table.data .em{color:var(--ink);font-weight:600}
+table.data .paren{color:var(--faint);font-size:12px}
+
+.gtag{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--ink)}
+.gdot{width:9px;height:9px;flex:none;border-radius:2px}
+.gdot.g0{background:var(--g-mid)} .gdot.g1{background:var(--g-low)} .gdot.g2{background:var(--g-high)}
+
+.timeline{display:flex;margin-top:2px}
+.phase{flex:1;position:relative;padding:16px 12px 0}
+.phase::before{content:"";position:absolute;top:5px;left:0;right:0;height:2px;background:var(--rule)}
+.phase::after{content:"";position:absolute;top:1px;left:0;width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.phase:last-child::before{right:calc(100% - 9px)}
+.phase .pn{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;color:var(--faint)}
+.phase .pt{display:block;font-size:14px;font-weight:600;margin:4px 0 3px;color:var(--ink);line-height:1.2}
+.phase .pd{font-size:11.5px;color:var(--ink-2);line-height:1.32}
+
+.barset{display:flex;flex-direction:column;gap:10px;margin-top:2px}
+.bar{display:grid;grid-template-columns:110px 1fr 50px;align-items:center;gap:11px}
+.bar .bl{font-size:13.5px;color:var(--ink-2)}
+.bar .bt{height:20px;background:var(--panel);border:1px solid var(--rule);position:relative;overflow:hidden}
+.bar .bf{position:absolute;inset:0 auto 0 0;background:var(--accent)}
+.bar .bf.g0{background:var(--g-mid)} .bar .bf.g1{background:var(--g-low)} .bar .bf.g2{background:var(--g-high)}
+.bar .bv{font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.dblock{display:flex;flex-direction:column;gap:12px}
+.drow{display:grid;grid-template-columns:170px 1fr;gap:22px;padding:13px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.drow:last-child{border-bottom:0}
+.drow .dk{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.drow .dv{font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.drow .dv .pick{color:var(--ink);font-weight:600;font-size:16.5px}
+.drow .dv .pick .m{font-family:"IBM Plex Mono",monospace;font-size:15px;color:var(--accent-ink)}
+
+/* reduction diagram (slide 9) */
+.reduce{display:flex;align-items:center;gap:20px;margin:2px 0 4px}
+.rbar{display:flex;height:52px;border:1px solid var(--rule);flex:none}
+.rseg{display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:#fff;padding:0 6px;text-align:center;line-height:1.1}
+.rseg.keep{background:var(--g-mid)} .rseg.keep2{background:var(--accent)} .rseg.drop{background:var(--faint)} .rseg.drop2{background:#a7998a}
+.rarrow{font-size:22px;color:var(--faint)}
+.rtot{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);font-weight:600;white-space:nowrap}
+
+.concl{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.concl .box h3{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 9px;padding-bottom:6px;border-bottom:2px solid var(--rule)}
+.concl .box p{font-size:12.5px;line-height:1.5;color:var(--ink-2);margin:0 0 8px}
+.concl .box p b{color:var(--ink);font-weight:600}
+.closingline{
+  margin-top:6px;font-family:"Spectral",Georgia,serif;font-style:italic;font-size:17px;line-height:1.45;
+  color:var(--ink);border-left:3px solid var(--accent);padding-left:16px;max-width:100ch;
+}
+
+.chrome{position:absolute;left:76px;right:76px;bottom:22px;display:flex;justify-content:space-between;align-items:baseline;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--faint);text-transform:uppercase;z-index:2}
+.progress{position:absolute;left:0;bottom:0;height:3px;background:var(--accent);width:0;transition:width .3s ease;z-index:2}
+.hint{position:fixed;right:14px;bottom:11px;z-index:5;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);opacity:.7;letter-spacing:.08em}
+
+/* cover + gracias */
+.cover{padding:0}
+.cover .inner{position:absolute;inset:0;padding:58px 76px;display:flex;flex-direction:column;z-index:3}
+.cover canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.mtn{position:absolute;left:0;right:0;bottom:0;width:100%;height:180px;z-index:2}
+.cover .kicker{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-ink)}
+.cover h1{font-family:"Spectral",Georgia,serif;font-weight:600;font-size:56px;line-height:1.07;letter-spacing:-.015em;margin:16px 0 0;max-width:17ch;text-wrap:balance;color:var(--ink)}
+.cover .subtitle{font-size:18px;color:var(--ink-2);margin:14px 0 0;max-width:44ch;line-height:1.45;font-style:italic;font-family:"Spectral",Georgia,serif}
+.cover .tag{display:inline-block;margin-top:16px;padding:6px 12px;border:1px solid var(--accent);color:var(--accent-ink);font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.cover .spacer{flex:1}
+.cover .who{display:flex;flex-wrap:wrap;gap:4px 30px;align-items:baseline}
+.cover .who .nm{font-size:18px;font-weight:600;color:var(--ink)}
+.cover .meta{margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--faint);letter-spacing:.03em}
+.cover .meta a{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent-ink) 40%,transparent)}
+
+.gracias .inner{align-items:flex-start;justify-content:center}
+.gracias h1{font-family:"Spectral",Georgia,serif;font-weight:600;font-size:82px;letter-spacing:-.02em;margin:0;color:var(--ink)}
+.gracias .g-sub{font-family:"Spectral",serif;font-style:italic;font-size:22px;color:var(--ink-2);margin:14px 0 0}
+.gracias .g-sig{margin-top:34px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--faint);line-height:1.9;letter-spacing:.03em}
+.gracias .g-sig .nm{color:var(--ink);font-weight:600}
+.gracias .g-sig a{color:var(--accent-ink);text-decoration:none}
+
+.refs{display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.4}
+.refs .r{display:grid;grid-template-columns:32px 1fr;gap:10px;color:var(--ink-2)}
+.refs .r .rn{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--accent-ink)}
+.refs .r a{color:var(--accent-ink);text-decoration:none;word-break:break-all}
+
+a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.hi{color:var(--ink);font-weight:600}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="bean"><ellipse cx="12" cy="12" rx="6.5" ry="9.5" transform="rotate(-24 12 12)" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8.5,4.5 C12.5,8.5 10.5,14.5 15.5,19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="hills-g">
+    <path d="M0,150 L0,96 L150,52 L300,104 L470,34 L640,100 L820,52 L1000,108 L1160,48 L1360,92 L1360,150 Z" fill="var(--accent)" opacity="0.11"/>
+    <path d="M0,150 L0,122 L210,88 L400,126 L580,82 L780,128 L980,92 L1180,130 L1360,108 L1360,150 Z" fill="var(--accent)" opacity="0.08"/>
+  </g>
+  <g id="branch-g" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+    <path d="M60,0 C54,80 66,150 40,230 C30,270 44,320 30,360"/>
+    <path d="M58,52 C86,44 104,58 112,84 C86,92 66,84 58,52 Z" stroke-width="2"/>
+    <path d="M56,118 C24,110 8,124 2,150 C30,160 50,150 56,118 Z" stroke-width="2"/>
+    <path d="M52,190 C82,182 100,196 108,222 C82,232 60,224 52,190 Z" stroke-width="2"/>
+    <circle cx="70" cy="150" r="8" stroke-width="2"/><circle cx="52" cy="250" r="8" stroke-width="2"/>
+  </g>
+</defs></svg>
+
+<div class="viewport">
+  <div class="stage" id="stage" tabindex="0" aria-roledescription="presentación">
+
+    <!-- 1 · PORTADA -->
+    <section class="slide cover active" data-eyebrow="">
+      <canvas id="cv1" aria-hidden="true"></canvas>
+      <svg class="mtn" viewBox="0 0 1280 180" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,180 L0,110 L170,44 L360,120 L560,30 L760,116 L960,48 L1120,124 L1280,66 L1280,180 Z" fill="var(--accent)" opacity="0.16"/>
+        <path d="M0,180 L0,140 L220,96 L420,144 L620,90 L840,148 L1040,100 L1280,132 L1280,180 Z" fill="var(--accent)" opacity="0.10"/>
+      </svg>
+      <svg class="branch" style="left:auto;right:44px;top:70px;height:420px;opacity:.13;transform:scaleX(-1)" viewBox="0 0 120 360" aria-hidden="true"><use href="#branch-g"/></svg>
+      <div class="inner">
+        <div class="kicker">Machine Learning · Universidad de La Sabana</div>
+        <h1>Segmentación de Cafés de Especialidad</h1>
+        <p class="subtitle">Patrones de calidad según características agronómicas y sensoriales</p>
+        <span class="tag">CRISP-DM · Clustering no supervisado</span>
+        <div class="spacer"></div>
+        <div class="who">
+          <span class="nm">Mariana Valle Moreno</span>
+          <span class="nm">Danna Alejandra Sanchez Monsalve</span>
+        </div>
+        <div class="meta"><a href="https://github.com/dany040518/specialty-coffee-classification" target="_blank" rel="noopener">github.com/dany040518/specialty-coffee-classification</a></div>
+      </div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 2 · CONTEXTO Y PROBLEMA -->
+    <section class="slide" data-eyebrow="Contexto y problema">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Cuando se conoce la calidad, ya no se puede cambiar</h2>
+      <div class="body-wrap">
+        <ul class="points">
+          <li>En Colombia el café sostiene a cerca de <b>549.000 familias caficultoras</b>, y el país es el tercer productor mundial y el primero de arábico suave lavado.<span class="ref">[1][2][3]</span></li>
+          <li>Para saber si un café es de calidad, un panel de catadores certificados sigue el protocolo de la Specialty Coffee Association y califica sobre 100 puntos atributos como el aroma, el sabor, la acidez, el cuerpo y el balance. Cuando un lote supera los <b>80 puntos</b> entra en la categoría de café de especialidad, que suele venderse a mejor precio.<span class="ref">[4][5]</span></li>
+          <li>El problema es que ese puntaje solo se conoce al final del proceso, cuando el café ya fue cosechado, trillado y catado, y todo lo que más influyó en el resultado ya quedó atrás.</li>
+          <li>Además, mirar solo si un lote pasa o no los 80 puntos deja por fuera las diferencias que existen entre cafés que ya son de especialidad.</li>
+        </ul>
+        <p class="lead">De ahí la pregunta que guía el proyecto: <span class="hi">¿existen perfiles de café distintos según su calidad en taza, y qué condiciones de cultivo y de manejo caracterizan a cada uno?</span></p>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 3 · OBJETIVO -->
+    <section class="slide" data-eyebrow="Objetivo">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Un paso atrás en la cadena</h2>
+      <div class="body-wrap">
+        <ul class="points">
+          <li>La industria ya tiene una referencia de calidad ampliamente aceptada: los <b>80 puntos</b> de <span class="mono">Total.Cup.Points</span>. Volver a construir esa frontera con un modelo no aportaría información nueva.</li>
+          <li>Por eso el objetivo es ubicarse un paso antes de la catación: agrupar los lotes por cómo quedaron en taza y describir qué condiciones del cultivo y del proceso, como el origen, la altitud, la variedad, el método de procesamiento y los defectos, caracterizan a cada grupo.</li>
+          <li>La meta es que un productor pueda ubicar sus lotes frente a esos perfiles y saber en qué parte del proceso tiene sentido intervenir.</li>
+        </ul>
+        <p class="lead">El proyecto se considera exitoso si los grupos resultan <span class="hi">claros, estables y fáciles de interpretar</span>, y si los rasgos que distinguen a cada uno tienen respaldo suficiente para orientar decisiones del sector.</p>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 4 · METODOLOGÍA -->
+    <section class="slide" data-eyebrow="Metodología">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Cómo se abordó el problema</h2>
+      <div class="body-wrap">
+        <p class="lead">El proyecto sigue la metodología <span class="hi">CRISP-DM</span>, en la que cada fase parte de lo que dejó la anterior.</p>
+        <div class="timeline">
+          <div class="phase"><span class="pn">01</span><span class="pt">Negocio</span><span class="pd">Problema, objetivos, criterios de éxito</span></div>
+          <div class="phase"><span class="pn">02</span><span class="pt">Datos</span><span class="pd">Nulos, atípicos, frecuencias, calidad</span></div>
+          <div class="phase"><span class="pn">03</span><span class="pt">Preparación</span><span class="pd">Limpieza, redundancia, estandarización</span></div>
+          <div class="phase"><span class="pn">04</span><span class="pt">Modelado</span><span class="pd">PCA, barrido de algoritmos y de k</span></div>
+          <div class="phase"><span class="pn">05</span><span class="pt">Evaluación</span><span class="pd">Estabilidad, contraste externo</span></div>
+          <div class="phase"><span class="pn">06</span><span class="pt">Interpretación</span><span class="pd">Perfilado de los grupos, dashboard</span></div>
+        </div>
+        <ul class="points" style="margin-top:8px">
+          <li>El análisis se hizo en <b>Python</b>, con <span class="mono">pandas</span> para organizar los datos, <span class="mono">scikit-learn</span> para el modelado y la validación, y <span class="mono">matplotlib</span> para las gráficas. Los resultados se comunican en un dashboard construido en Power BI o Tableau.</li>
+          <li>Todos los parámetros del análisis (la semilla aleatoria, los rangos de limpieza, las columnas que entran y el número de grupos) están reunidos en <b>un solo archivo de configuración</b>, de modo que cualquiera puede reproducir el trabajo completo sin tocar el código.</li>
+        </ul>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 5 · VARIABLES -->
+    <section class="slide" data-eyebrow="Datos y variables">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Las 44 variables del dataset, en seis grupos</h2>
+      <div class="body-wrap">
+        <table class="data" style="font-size:13px">
+          <thead><tr><th style="width:190px">Grupo</th><th>Variables</th><th style="width:215px">Para qué</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="lead-cell">Catación SCA <span class="paren">(10)</span></td>
+              <td>Aroma, Flavor, Aftertaste <span class="paren">(gusto residual)</span>, Acidity, Body, Balance, Uniformity <span class="paren">(uniformidad entre tazas)</span>, Clean.Cup <span class="paren">(taza limpia)</span>, Sweetness <span class="paren">(dulzor)</span>, Cupper.Points <span class="paren">(puntaje del catador)</span></td>
+              <td class="em">Se usaron como entrada para el clustering</td>
+            </tr>
+            <tr>
+              <td class="lead-cell">Referencia <span class="paren">(1)</span></td>
+              <td><span class="mono">Total.Cup.Points</span> <span class="paren">(la suma de los diez subpuntajes)</span></td>
+              <td class="em">Se usó como referencia, no como entrada del clustering</td>
+            </tr>
+            <tr>
+              <td class="lead-cell">Perfilado de origen <span class="paren">(5)</span></td>
+              <td>Country.of.Origin <span class="paren">(país)</span>, altitude_mean_meters <span class="paren">(altitud media)</span>, Variety <span class="paren">(variedad)</span>, Processing.Method <span class="paren">(procesamiento)</span>, Harvest.Year <span class="paren">(año de cosecha)</span></td>
+              <td>Se usó para describir los grupos formados, no para agruparlos</td>
+            </tr>
+            <tr>
+              <td class="lead-cell">Perfilado físico <span class="paren">(5)</span></td>
+              <td>Color <span class="paren">(del grano verde)</span>, Moisture <span class="paren">(humedad)</span>, Category.One.Defects <span class="paren">(defectos graves)</span>, Category.Two.Defects <span class="paren">(defectos leves)</span>, Quakers <span class="paren">(granos inmaduros)</span></td>
+              <td>Se usó para describir los grupos formados, no para agruparlos</td>
+            </tr>
+            <tr>
+              <td class="lead-cell">Identificación y ubicación <span class="paren">(11)</span></td>
+              <td>Lot.Number, Farm.Name, Mill, ICO.Number, Producer, Company, Owner, Owner.1, Region, Altitude <span class="paren">(texto libre)</span>, Unnamed: 0 <span class="paren">(índice)</span></td>
+              <td>No se utilizaron: identifican el lote, no describen el café</td>
+            </tr>
+            <tr>
+              <td class="lead-cell">Administrativas y redundantes <span class="paren">(12)</span></td>
+              <td>Species <span class="paren">(constante)</span>, altitude_low_meters, altitude_high_meters, Number.of.Bags, Bag.Weight, unit_of_measurement, In.Country.Partner, Grading.Date, Expiration, Certification.Body / Address / Contact</td>
+              <td>No se utilizaron: son datos de negocio y no describen el café</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 6 · VALORES NULOS -->
+    <section class="slide" data-eyebrow="Datos y variables · Nulos">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Valores nulos</h2>
+      <div class="body-wrap">
+        <div class="cols" style="grid-template-columns:.9fr 1.1fr;align-items:start">
+          <table class="data" style="font-size:12.5px">
+            <thead><tr><th>Variable</th><th>Nulidad</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">Lot.Number</td><td class="n">79 %</td></tr>
+              <tr><td class="mono">Farm.Name</td><td class="n">27 %</td></tr>
+              <tr><td class="mono">Mill</td><td class="n">24 %</td></tr>
+              <tr><td class="mono">Color</td><td class="n">20 %</td></tr>
+              <tr><td class="mono">Producer</td><td class="n">18 %</td></tr>
+              <tr><td class="mono">altitude_*_meters</td><td class="n">17 %</td></tr>
+              <tr><td class="mono">Company</td><td class="n">16 %</td></tr>
+              <tr><td class="mono">Variety</td><td class="n">15 %</td></tr>
+              <tr><td class="mono">Processing.Method</td><td class="n">12 %</td></tr>
+              <tr><td class="mono">ICO.Number</td><td class="n">11 %</td></tr>
+              <tr><td class="mono">Region</td><td class="n">4 %</td></tr>
+              <tr><td class="mono">Harvest.Year</td><td class="n">4 %</td></tr>
+            </tbody>
+            <caption>El resto de columnas tiene menos del 1 % de nulos.</caption>
+          </table>
+          <ul class="points tight">
+            <li>Se tomó como decisión <b>eliminar</b> las columnas cuya nulidad superaba un umbral alto, porque no había forma de completarlas de manera confiable.</li>
+            <li>Las variables que hacían parte del <b>perfilado</b> se conservaron, y sus valores faltantes se marcaron como <span class="mono">"Desconocido"</span> para no perder los lotes.</li>
+            <li>La <b>altitud no se imputó</b>: como no entra al clustering sino que solo describe los grupos, rellenarla con un promedio habría introducido un sesgo sin ningún beneficio.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 7 · REGISTRO CORRUPTO -->
+    <section class="slide" data-eyebrow="Datos y variables · Registro corrupto">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Un lote sin catar quedó registrado como cero</h2>
+      <div class="body-wrap">
+        <div class="media imgR">
+          <div>
+            <ul class="points tight">
+              <li>Al revisar los diagramas de caja de los subpuntajes de catación, todos mostraban un mismo punto extremo en cero.</li>
+              <li>Se trataba de un único lote con los diez subpuntajes y el puntaje total en cero.</li>
+              <li>En la escala SCA un lote realmente evaluado no baja de unos 60 puntos, así que ese cero correspondía a un lote que no fue catado o que se cargó mal.</li>
+              <li>Se eliminó ese registro y el análisis quedó con <b>1.310 lotes</b>.</li>
+            </ul>
+          </div>
+          <figure class="figframe">
+            <img class="fig" data-img="boxplots_subpuntajes_sca" alt="Diagramas de caja de los subpuntajes de catación SCA, con un punto atípico en cero">
+            <figcaption>Diagramas de caja · subpuntajes de catación SCA</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 8 · VALORES IMPOSIBLES -->
+    <section class="slide" data-eyebrow="Datos y variables · Valores imposibles">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Valores que no pueden existir en un cultivo de café</h2>
+      <div class="body-wrap">
+        <div class="media imgL">
+          <figure class="figframe">
+            <img class="fig" data-img="boxplot_altitude_mean" alt="Diagrama de caja de la altitud media, con valores extremos imposibles">
+            <figcaption>Diagrama de caja · altitud media reportada</figcaption>
+          </figure>
+          <ul class="points tight">
+            <li><b>Altitud.</b> Se encontraron valores desde 1 metro hasta decenas de miles de metros. Las fincas de café arábica se ubican en su mayoría entre los 200 y los 3.000 metros, así que los valores por fuera de ese rango se tomaron como errores de digitación y se reemplazaron por dato faltante.</li>
+            <li><b>Humedad.</b> Se encontraron lotes con valor cero. La humedad de un grano de café verde está entre el 9 % y el 13 % y nunca llega a cero, de modo que esos ceros eran faltantes escritos como cero y también se reemplazaron por dato faltante.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 9 · VARIABLES ELIMINADAS -->
+    <section class="slide" data-eyebrow="Datos y variables · Reducción">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="branch" viewBox="0 0 120 360" aria-hidden="true"><use href="#branch-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Qué se dejó por fuera del análisis</h2>
+      <div class="body-wrap">
+        <div class="reduce">
+          <div class="rbar" style="width:520px">
+            <div class="rseg keep2" style="width:23%">Catación 10</div>
+            <div class="rseg keep" style="width:5%">Ref.</div>
+            <div class="rseg keep" style="width:23%">Perfilado 10</div>
+            <div class="rseg drop" style="width:25%">Identificación 11</div>
+            <div class="rseg drop2" style="width:24%">Administrativas 12</div>
+          </div>
+          <span class="rarrow">→</span>
+          <span class="rtot">21 columnas<br>conservadas</span>
+        </div>
+        <ul class="points">
+          <li>Variables como <span class="mono">Lot.Number</span> o <span class="mono">Farm.Name</span> hacen parte de la identificación del lote y no describen el café en sí, así que se decidió no tenerlas en cuenta para el análisis.</li>
+          <li>Las columnas con una nulidad muy alta también se eliminaron, y de las tres columnas de altitud se conservó solo <span class="mono">altitude_mean_meters</span> como referencia de altura.</li>
+          <li>El dataset original venía en dos archivos: uno de café arábica y otro de café robusta. El de robusta usa un formulario de catación distinto, con atributos sensoriales que no existen en el arábica, y apenas contiene 28 registros. Se decidió trabajar solo con arábica para no inventar variables que no existían ni forzar equivalencias que no eran directas.</li>
+        </ul>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 10 · PCA -->
+    <section class="slide" data-eyebrow="Modelo y solución · Componentes principales">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Análisis de componentes principales</h2>
+      <div class="body-wrap">
+        <div class="media imgL">
+          <figure class="figframe">
+            <img class="fig" data-img="corr_subpuntajes_sca" alt="Matriz de correlación de los subpuntajes de catación SCA">
+            <figcaption>Correlación entre los subpuntajes de catación</figcaption>
+          </figure>
+          <div>
+            <ul class="points tight">
+              <li>Siete de los subpuntajes están muy correlacionados: cuando un lote puntúa alto en uno, tiende a puntuar alto en todos.</li>
+              <li>Por eso se hizo un PCA sobre esas variables, con la regla de <b>conservar el 90 % de la información</b>, para decidir cuántas dimensiones mantener.</li>
+            </ul>
+            <table class="data" style="font-size:12px;margin-top:10px">
+              <thead><tr><th>Dimensión</th><th>Variación</th><th>Acumulado</th></tr></thead>
+              <tbody>
+                <tr><td>Dim 1</td><td class="n">72.4 %</td><td class="n">72.4 %</td></tr>
+                <tr><td>Dim 2</td><td class="n">6.9 %</td><td class="n em">79.3 %</td></tr>
+                <tr><td>Dim 3</td><td class="n">5.8 %</td><td class="n">85.1 %</td></tr>
+                <tr><td>Dim 4</td><td class="n">5.4 %</td><td class="n em">90.5 %</td></tr>
+              </tbody>
+              <caption>Dos dimensiones concentran el 79 %; el 90 % se alcanza recién en la cuarta.</caption>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 11 · COMPARACIÓN -->
+    <section class="slide" data-eyebrow="Modelo y solución · Comparación">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">¿Qué combinación separa mejor los grupos?</h2>
+      <div class="body-wrap">
+        <div class="media imgR">
+          <div>
+            <p style="font-size:14px;line-height:1.5;color:var(--ink-2);margin:0 0 12px">
+              Se probaron <b class="hi">81 combinaciones</b>: los 7 atributos sin reducir, el PCA de 2 dimensiones y el de 4, cada uno con tres algoritmos y con <span class="mono">k</span> de 2 a 10.
+            </p>
+            <table class="data" style="font-size:12px">
+              <thead><tr><th>Repr.</th><th>Algoritmo</th><th>k</th><th>Silueta</th></tr></thead>
+              <tbody>
+                <tr><td class="em mono">PCA 2</td><td>aglomerativo</td><td class="n">2</td><td class="n">0.465</td></tr>
+                <tr><td class="em mono">PCA 2</td><td>k-means</td><td class="n">2</td><td class="n">0.458</td></tr>
+                <tr><td class="em mono">PCA 2</td><td>k-means</td><td class="n em">3</td><td class="n em">0.428</td></tr>
+                <tr><td class="em mono">PCA 2</td><td>k-means</td><td class="n">4</td><td class="n">0.398</td></tr>
+                <tr><td class="mono">PCA 4</td><td>k-means</td><td class="n">2</td><td class="n">0.391</td></tr>
+                <tr><td class="mono">7 atrib.</td><td>aglomerativo</td><td class="n">2</td><td class="n">0.354</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="figframe">
+            <img class="fig" data-img="silueta_vs_k" alt="Coeficiente de silueta según el número de grupos, para las tres representaciones">
+            <figcaption>Silueta según el número de grupos</figcaption>
+          </figure>
+        </div>
+        <ul class="points tight">
+          <li>La <b>silueta</b> (métrica principal, más alta es mejor) mide para cada lote qué tan cerca está de su grupo frente al vecino. Se completó con <b>Davies-Bouldin</b> (más baja es mejor) y <b>Calinski-Harabasz</b> (más alta es mejor).</li>
+          <li>Con las tres métricas a la vez, el mejor equilibrio se dio con <b>PCA de 2 dimensiones, k-means y 3 grupos</b>.</li>
+        </ul>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 12 · DECISIÓN -->
+    <section class="slide" data-eyebrow="Modelo y solución · Decisión">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Por qué k-means con tres grupos</h2>
+      <div class="body-wrap">
+        <div class="dblock">
+          <div class="drow">
+            <span class="dk">Representación</span>
+            <span class="dv"><span class="pick">PCA de <span class="m">2 dimensiones</span></span><br>Es la que mejor puntúa en las tres métricas y en todos los números de grupo. Las dos primeras dimensiones concentran la señal; agregar más solo suma ruido.</span>
+          </div>
+          <div class="drow">
+            <span class="dk">Algoritmo</span>
+            <span class="dv"><span class="pick"><span class="m">k-means</span></span><br>El agrupamiento aglomerativo daba una calidad muy parecida, pero k-means es más rápido, da el mismo resultado cada vez que se corre y permite asignar lotes nuevos a un grupo sin volver a entrenar.</span>
+          </div>
+          <div class="drow">
+            <span class="dk">Número de grupos</span>
+            <span class="dv"><span class="pick"><span class="m">3</span></span><br>Con 2 grupos el modelo solo divide entre café mejor y peor, algo que ya dice el umbral de 80 puntos. Con 3 grupos aísla en uno solo a <b>154 de los 180 lotes</b> que no llegan a 80, y deja además dos niveles distinguibles por encima del umbral.</span>
+          </div>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 13 · RESULTADOS · VÁLIDOS -->
+    <section class="slide" data-eyebrow="Resultados · Validez">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Los grupos son tres tramos de una misma escala</h2>
+      <div class="body-wrap">
+        <div class="media imgR">
+          <div>
+            <ul class="points tight">
+              <li>El modelo separó los 1.310 lotes en tres grupos, de <b>708, 295 y 307</b> lotes.</li>
+              <li>El coeficiente de silueta global es <b>0.428</b>, y baja a <b>0.296</b> si se calcula sobre los siete atributos sin reducir. Un valor en ese rango indica una separación moderada.</li>
+              <li>No es una falla del modelo: como casi toda la variación entre los lotes cabe en una sola dimensión, la de calidad general, los grupos son tramos contiguos de esa escala y no nubes completamente separadas.</li>
+              <li>Aun así, ningún grupo quedó mal formado: entre el <b>0 % y el 1.6 %</b> de los lotes de cada grupo cae en una zona ambigua.</li>
+            </ul>
+          </div>
+          <figure class="figframe">
+            <img class="fig" data-img="grupos_proyeccion_2d" alt="Los lotes proyectados en dos dimensiones, coloreados por grupo">
+            <figcaption>Los 1.310 lotes proyectados en 2 dimensiones, por grupo</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 14 · RESULTADOS · ESTABILIDAD -->
+    <section class="slide" data-eyebrow="Resultados · Estabilidad">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">¿Los grupos son estables o dependen del azar?</h2>
+      <div class="body-wrap">
+        <div class="stat-row">
+          <div class="stat"><span class="v">0.996</span><span class="k">ARI · 20 resiembras</span><span class="n">Cambiar el punto de partida del algoritmo casi no cambia los grupos.</span></div>
+          <div class="stat"><span class="v">0.952</span><span class="k">ARI · 50 submuestras del 80 %</span><span class="n">Con un 20 % menos de lotes, los grupos serían casi los mismos.</span></div>
+          <div class="stat"><span class="v">98.4<small> %</small></span><span class="k">Estabilidad lote a lote</span><span class="n">Solo 32 lotes, todos de frontera, cambian de grupo entre corridas.</span></div>
+        </div>
+        <p class="lead">El <span class="hi">ARI</span> (Adjusted Rand Index) compara dos particiones de los mismos datos: <b>1</b> significa que son idénticas y <b>0</b> que coinciden solo lo esperable por azar. Los valores altos indican que la estructura de tres grupos es real y no un resultado de una única corrida.</p>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 15 · RESULTADOS · CONTRASTE EXTERNO -->
+    <section class="slide" data-eyebrow="Resultados · Contraste externo">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">El modelo no repitió la frontera de los 80 puntos</h2>
+      <div class="body-wrap">
+        <div class="cols" style="grid-template-columns:1.05fr .95fr">
+          <div class="stat" style="background:var(--panel)">
+            <span class="v">0.177</span>
+            <span class="k">ARI · grupos frente al umbral de 80 puntos</span>
+            <span class="n">Es un valor bajo. El 86 % de los lotes ya supera los 80, porque la base solo reúne cafés que buscan certificación. Los grupos describen otra cosa: no volvieron a trazar la línea de la industria.</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Grupo</th><th>&lt; 80</th><th>≥ 80</th><th>% ≥ 80</th></tr></thead>
+            <tbody>
+              <tr><td><span class="gtag"><span class="gdot g0"></span>0</span></td><td class="n">24</td><td class="n">684</td><td class="n">96.6</td></tr>
+              <tr><td><span class="gtag"><span class="gdot g1"></span>1</span></td><td class="n em">154</td><td class="n">141</td><td class="n">47.8</td></tr>
+              <tr><td><span class="gtag"><span class="gdot g2"></span>2</span></td><td class="n">2</td><td class="n">305</td><td class="n">99.3</td></tr>
+            </tbody>
+            <caption>El grupo 1 reúne 154 de los 180 lotes que no alcanzan los 80 puntos.</caption>
+          </table>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 16 · RESULTADOS · LOS TRES GRUPOS -->
+    <section class="slide" data-eyebrow="Resultados · Perfilado">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Tres niveles de calidad, cada uno con su perfil</h2>
+      <div class="body-wrap">
+        <table class="data" style="font-size:13px">
+          <thead><tr><th>Grupo</th><th>n</th><th>Puntaje</th><th>% esp.</th><th>País principal</th><th>Altitud</th><th>Defectos leves</th></tr></thead>
+          <tbody>
+            <tr><td><span class="gtag"><span class="gdot g0"></span>Nivel medio · lavados · latinoamericanos</span></td><td class="n">708</td><td class="n">82.4</td><td class="n">96.6</td><td>Colombia (18 %)</td><td class="n">1.344 m</td><td class="n">3.09</td></tr>
+            <tr><td><span class="gtag"><span class="gdot g1"></span>Nivel bajo · fincas bajas · más defectos</span></td><td class="n">295</td><td class="n">78.9</td><td class="n">47.8</td><td>México (32 %)</td><td class="n">1.230 m</td><td class="n em">5.71</td></tr>
+            <tr><td><span class="gtag"><span class="gdot g2"></span>Nivel alto · fincas altas · orígenes variados</span></td><td class="n">307</td><td class="n">84.8</td><td class="n">99.3</td><td>Colombia · Etiopía · Kenia</td><td class="n">1.478 m</td><td class="n">2.72</td></tr>
+          </tbody>
+        </table>
+        <div>
+          <p class="subh">Lo que más los separa en términos controlables: los defectos leves por lote</p>
+          <div class="barset">
+            <div class="bar"><span class="bl"><span class="gtag"><span class="gdot g0"></span>Grupo 0</span></span><span class="bt"><span class="bf g0" style="width:54%"></span></span><span class="bv">3.09</span></div>
+            <div class="bar"><span class="bl"><span class="gtag"><span class="gdot g1"></span>Grupo 1</span></span><span class="bt"><span class="bf g1" style="width:100%"></span></span><span class="bv">5.71</span></div>
+            <div class="bar"><span class="bl"><span class="gtag"><span class="gdot g2"></span>Grupo 2</span></span><span class="bt"><span class="bf g2" style="width:48%"></span></span><span class="bv">2.72</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--faint);margin:8px 0 0">La altitud se ordena con la calidad pero los rangos se solapan entre grupos; la variedad resultó poco concluyente.</p>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 17 · CONCLUSIONES -->
+    <section class="slide" data-eyebrow="Conclusiones y decisiones">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Conclusiones y decisiones</h2>
+      <div class="body-wrap">
+        <div class="concl">
+          <div class="box">
+            <h3>Qué aprendimos</h3>
+            <p>Mirar solo la silueta habría llevado a elegir <b>2 grupos</b>; fueron las pruebas de <b>estabilidad</b> y el <b>contraste externo</b> los que sostuvieron la decisión de 3.</p>
+            <p>Los atributos de catación son casi <b>una sola dimensión</b> de calidad: el valor del análisis está en cruzar los niveles con el origen, más que en el agrupamiento en sí.</p>
+          </div>
+          <div class="box">
+            <h3>Qué decisiones habilita</h3>
+            <p><b>Productor del nivel bajo:</b> priorizar la reducción de <b>defectos después de la cosecha</b> (secado, selección, almacenamiento), que es lo que más separa a los grupos y lo que sí se controla.</p>
+            <p><b>Comprador:</b> segmentar oferta y precio dentro de la especialidad, donde hay dos niveles distinguibles.</p>
+            <p><b>Planeación de finca:</b> altitud y origen como contexto de largo plazo.</p>
+          </div>
+          <div class="box">
+            <h3>Límites y qué sigue</h3>
+            <p>La muestra está <b>sesgada</b>: solo cafés que buscan certificación, y el 86 % ya pasa los 80 puntos.</p>
+            <p>Son <b>asociaciones, no causas</b>. Hay no-respuesta desigual en la altitud y el análisis es solo de arábica.</p>
+            <p>Queda pendiente <b>construir el dashboard</b> sobre el dataset ya exportado.</p>
+          </div>
+        </div>
+        <p class="closingline">Este proyecto no buscaba predecir el puntaje de un café, porque esa referencia ya existe con el umbral de los 80 puntos. Lo que aporta es un mapa validado de la calidad del café de especialidad, con tres niveles bien diferenciados y estables, y una señal concreta: entre las condiciones que un productor sí puede cambiar, la que más distingue un nivel de otro es el control de defectos después de la cosecha, por encima de la altitud o la variedad.</p>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 18 · REFERENCIAS -->
+    <section class="slide" data-eyebrow="Referencias">
+      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
+      <div class="eyebrow" data-eb></div>
+      <h2 class="title">Referencias</h2>
+      <div class="body-wrap">
+        <div class="refs">
+          <div class="r"><span class="rn">[1]</span><span>Semana, “Cerca de 549.000 familias cafeteras producen más de 106 millones de sacos de café cada año en Colombia”, 2024.</span></div>
+          <div class="r"><span class="rn">[2]</span><span>Legiscomex, “Colombia: tercer exportador de café del mundo”.</span></div>
+          <div class="r"><span class="rn">[3]</span><span>Federación Nacional de Cafeteros, “Informe de Gestión 2024”, 2025.</span></div>
+          <div class="r"><span class="rn">[4]</span><span>Wikipedia, “Specialty coffee”, The Free Encyclopedia.</span></div>
+          <div class="r"><span class="rn">[5]</span><span>Perfect Daily Grind, “Should specialty coffee start at 84 points? Quality challenges”, nov. 2024.</span></div>
+          <div class="r"><span class="rn">[6]</span><span>Coffee Quality Institute database — J. LeDoux, <a href="https://github.com/jldbc/coffee-quality-database" target="_blank" rel="noopener">github.com/jldbc/coffee-quality-database</a>. Conjunto de datos del proyecto.</span></div>
+        </div>
+      </div>
+      <div class="chrome"><span data-name></span><span data-count></span></div>
+      <div class="progress" data-progress></div>
+    </section>
+
+    <!-- 19 · GRACIAS -->
+    <section class="slide cover gracias" data-eyebrow="">
+      <svg class="mtn" viewBox="0 0 1280 180" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,180 L0,110 L170,44 L360,120 L560,30 L760,116 L960,48 L1120,124 L1280,66 L1280,180 Z" fill="var(--accent)" opacity="0.16"/>
+        <path d="M0,180 L0,140 L220,96 L420,144 L620,90 L840,148 L1040,100 L1280,132 L1280,180 Z" fill="var(--accent)" opacity="0.10"/>
+      </svg>
+      <svg class="branch" style="left:auto;right:54px;top:90px;height:400px;opacity:.14;transform:scaleX(-1)" viewBox="0 0 120 360" aria-hidden="true"><use href="#branch-g"/></svg>
+      <div class="inner">
+        <div class="spacer"></div>
+        <h1>Gracias</h1>
+        <p class="g-sub">Gracias por escucharnos.</p>
+        <div class="g-sig">
+          <span class="nm">Mariana Valle Moreno</span> · <span class="nm">Danna Alejandra Sanchez Monsalve</span><br>
+          Machine Learning · Universidad de La Sabana<br>
+          <a href="https://github.com/dany040518/specialty-coffee-classification" target="_blank" rel="noopener">github.com/dany040518/specialty-coffee-classification</a>
+        </div>
+        <div class="spacer"></div>
+      </div>
+      <div class="progress" data-progress></div>
+    </section>
+
+  </div>
+</div>
+<div class="hint" aria-hidden="true">← → · barra espaciadora</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length, stage = document.getElementById('stage'), idx = 0;
+
+  function fit(){
+    var s = Math.min(window.innerWidth*0.94/1280, window.innerHeight*0.94/720);
+    document.documentElement.style.setProperty('--s', s.toFixed(4));
+  }
+  window.addEventListener('resize', fit); fit();
+
+  function render(){
+    slides.forEach(function(sl,i){
+      sl.classList.toggle('active', i===idx);
+      var eb = sl.querySelector('[data-eb]'); if(eb) eb.textContent = sl.getAttribute('data-eyebrow')||'';
+      var nm = sl.querySelector('[data-name]'); if(nm) nm.textContent = 'Segmentación de cafés de especialidad';
+      var ct = sl.querySelector('[data-count]'); if(ct) ct.textContent = String(i+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+      var pr = sl.querySelector('[data-progress]'); if(pr) pr.style.width = (i/(total-1)*100).toFixed(2)+'%';
+    });
+    if(location.hash !== '#'+(idx+1)) history.replaceState(null,'','#'+(idx+1));
+  }
+  function go(n){ idx = Math.max(0, Math.min(total-1, n)); render(); }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '||e.key==='j'){ e.preventDefault(); go(idx+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'||e.key==='k'){ e.preventDefault(); go(idx-1); }
+    else if(e.key==='Home'){ e.preventDefault(); go(0); }
+    else if(e.key==='End'){ e.preventDefault(); go(total-1); }
+  });
+  stage.addEventListener('click', function(e){
+    if(e.target.closest('a')) return;
+    var r = stage.getBoundingClientRect();
+    if((e.clientX-r.left)/r.width > 0.42) go(idx+1); else go(idx-1);
+  });
+
+  var start = parseInt((location.hash||'').replace('#',''),10);
+  if(start>=1 && start<=total) idx = start-1;
+  render();
+
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  function paint(cv){
+    if(!cv) return;
+    var w=cv.width=1280, h=cv.height=720, ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,w,h);
+    var css=getComputedStyle(document.documentElement);
+    var cols=[css.getPropertyValue('--g-mid').trim(),css.getPropertyValue('--g-low').trim(),css.getPropertyValue('--g-high').trim()];
+    var rnd=mulberry32(4242);
+    var centers=[[0.46,0.50],[0.30,0.60],[0.64,0.38]], counts=[150,66,70];
+    for(var c=0;c<3;c++){
+      ctx.fillStyle=cols[c];
+      for(var i=0;i<counts[c];i++){
+        var gx=(rnd()+rnd()+rnd()-1.5), gy=(rnd()+rnd()+rnd()-1.5);
+        var x=(centers[c][0]+gx*0.07)*w, y=(centers[c][1]+gy*0.10)*h, rad=2.2+rnd()*3.2;
+        ctx.globalAlpha=0.08+rnd()*0.12;
+        ctx.beginPath(); ctx.arc(x,y,rad,0,6.2832); ctx.fill();
+      }
+    }
+    ctx.globalAlpha=1;
+  }
+  paint(document.getElementById('cv1'));
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  if(mq.addEventListener) mq.addEventListener('change', function(){ paint(document.getElementById('cv1')); });
+})();
+</script>
