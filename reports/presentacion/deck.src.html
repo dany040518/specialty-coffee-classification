@@ -85,6 +85,17 @@ body{
 .points.tight li{font-size:14.5px;line-height:1.45}
 .points.tight{gap:8px}
 .ref{font-size:.7em;vertical-align:super;color:var(--accent-ink);font-family:"IBM Plex Mono",monospace;font-weight:600;letter-spacing:0}
+.klbl{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:9px 0 2px}
+.klbl:first-of-type{margin-top:0}
+.klist{margin:0;font-size:11px;line-height:1.55;color:var(--ink-2)}
+.klist .mono{color:var(--ink)}
+
+.slide.break{align-items:center;justify-content:center}
+.break-title{
+  position:relative;z-index:1;
+  font-family:"Spectral",Georgia,serif;font-weight:600;font-size:56px;line-height:1.1;
+  letter-spacing:-.015em;color:var(--ink);text-align:center;text-wrap:balance;max-width:22ch;
+}
 
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;min-height:0}
 .cols.w{grid-template-columns:1.1fr .9fr}
@@ -244,63 +255,40 @@ a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-off
       <div class="progress" data-progress></div>
     </section>
 
-    <!-- 2 · CONTEXTO Y PROBLEMA -->
-    <section class="slide" data-eyebrow="Contexto y problema">
+    <!-- 2 · CONTEXTO, PROBLEMA, OBJETIVO Y METODOLOGÍA -->
+    <section class="slide" data-eyebrow="Contexto · Problema · Objetivo · Metodología">
       <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="branch" viewBox="0 0 120 360" aria-hidden="true"><use href="#branch-g"/></svg>
       <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
       <div class="eyebrow" data-eb></div>
-      <h2 class="title">Cuando se conoce la calidad, ya no se puede cambiar</h2>
-      <div class="body-wrap">
-        <ul class="points">
-          <li>En Colombia el café sostiene a cerca de <b>549.000 familias caficultoras</b>, y el país es el tercer productor mundial y el primero de arábico suave lavado.<span class="ref">[1][2][3]</span></li>
-          <li>Para saber si un café es de calidad, un panel de catadores certificados sigue el protocolo de la Specialty Coffee Association y califica sobre 100 puntos atributos como el aroma, el sabor, la acidez, el cuerpo y el balance. Cuando un lote supera los <b>80 puntos</b> entra en la categoría de café de especialidad, que suele venderse a mejor precio.<span class="ref">[4][5]</span></li>
-          <li>El problema es que ese puntaje solo se conoce al final del proceso, cuando el café ya fue cosechado, trillado y catado, y todo lo que más influyó en el resultado ya quedó atrás.</li>
-          <li>Además, mirar solo si un lote pasa o no los 80 puntos deja por fuera las diferencias que existen entre cafés que ya son de especialidad.</li>
-        </ul>
-        <p class="lead">De ahí la pregunta que guía el proyecto: <span class="hi">¿existen perfiles de café distintos según su calidad en taza, y qué condiciones de cultivo y de manejo caracterizan a cada uno?</span></p>
-      </div>
-      <div class="chrome"><span data-name></span><span data-count></span></div>
-      <div class="progress" data-progress></div>
-    </section>
-
-    <!-- 3 · OBJETIVO -->
-    <section class="slide" data-eyebrow="Objetivo">
-      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
-      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
-      <div class="eyebrow" data-eb></div>
-      <h2 class="title">Un paso atrás en la cadena</h2>
-      <div class="body-wrap">
-        <ul class="points">
-          <li>La industria ya tiene una referencia de calidad ampliamente aceptada: los <b>80 puntos</b> de <span class="mono">Total.Cup.Points</span>. Volver a construir esa frontera con un modelo no aportaría información nueva.</li>
-          <li>Por eso el objetivo es ubicarse un paso antes de la catación: agrupar los lotes por cómo quedaron en taza y describir qué condiciones del cultivo y del proceso, como el origen, la altitud, la variedad, el método de procesamiento y los defectos, caracterizan a cada grupo.</li>
-          <li>La meta es que un productor pueda ubicar sus lotes frente a esos perfiles y saber en qué parte del proceso tiene sentido intervenir.</li>
-        </ul>
-        <p class="lead">El proyecto se considera exitoso si los grupos resultan <span class="hi">claros, estables y fáciles de interpretar</span>, y si los rasgos que distinguen a cada uno tienen respaldo suficiente para orientar decisiones del sector.</p>
-      </div>
-      <div class="chrome"><span data-name></span><span data-count></span></div>
-      <div class="progress" data-progress></div>
-    </section>
-
-    <!-- 4 · METODOLOGÍA -->
-    <section class="slide" data-eyebrow="Metodología">
-      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
-      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
-      <div class="eyebrow" data-eb></div>
-      <h2 class="title">Cómo se abordó el problema</h2>
-      <div class="body-wrap">
-        <p class="lead">El proyecto sigue la metodología <span class="hi">CRISP-DM</span>, en la que cada fase parte de lo que dejó la anterior.</p>
-        <div class="timeline">
-          <div class="phase"><span class="pn">01</span><span class="pt">Negocio</span><span class="pd">Problema, objetivos, criterios de éxito</span></div>
-          <div class="phase"><span class="pn">02</span><span class="pt">Datos</span><span class="pd">Nulos, atípicos, frecuencias, calidad</span></div>
-          <div class="phase"><span class="pn">03</span><span class="pt">Preparación</span><span class="pd">Limpieza, redundancia, estandarización</span></div>
-          <div class="phase"><span class="pn">04</span><span class="pt">Modelado</span><span class="pd">PCA, barrido de algoritmos y de k</span></div>
-          <div class="phase"><span class="pn">05</span><span class="pt">Evaluación</span><span class="pd">Estabilidad, contraste externo</span></div>
-          <div class="phase"><span class="pn">06</span><span class="pt">Interpretación</span><span class="pd">Perfilado de los grupos, dashboard</span></div>
+      <h2 class="title">El proyecto de un vistazo</h2>
+      <div class="body-wrap" style="gap:20px">
+        <div class="cols" style="grid-template-columns:repeat(3,1fr);gap:26px;align-items:start">
+          <div>
+            <h3>Contexto</h3>
+            <p style="font-size:13.5px;line-height:1.5;color:var(--ink-2);margin:0">El café sostiene a unas <b>549.000 familias</b> en Colombia. Su calidad se mide con el protocolo <b>SCA</b>, sobre 100 puntos; desde <b>80</b> es “café de especialidad” y vale más.<span class="ref">[1-5]</span></p>
+          </div>
+          <div>
+            <h3>Problema</h3>
+            <p style="font-size:13.5px;line-height:1.5;color:var(--ink-2);margin:0">Ese puntaje solo se conoce al final, cuando ya nada se puede cambiar. Y el corte binario de 80 esconde las diferencias entre cafés que ya son de especialidad.</p>
+          </div>
+          <div>
+            <h3>Objetivo</h3>
+            <p style="font-size:13.5px;line-height:1.5;color:var(--ink-2);margin:0">Ubicarse un paso antes de la catación: agrupar los lotes por su calidad en taza y describir qué condiciones de origen y manejo caracterizan a cada grupo, para saber <b>dónde intervenir</b>. Grupos <span class="hi">claros, estables e interpretables</span>.</p>
+          </div>
         </div>
-        <ul class="points" style="margin-top:8px">
-          <li>El análisis se hizo en <b>Python</b>, con <span class="mono">pandas</span> para organizar los datos, <span class="mono">scikit-learn</span> para el modelado y la validación, y <span class="mono">matplotlib</span> para las gráficas. Los resultados se comunican en un dashboard construido en Power BI o Tableau.</li>
-          <li>Todos los parámetros del análisis (la semilla aleatoria, los rangos de limpieza, las columnas que entran y el número de grupos) están reunidos en <b>un solo archivo de configuración</b>, de modo que cualquiera puede reproducir el trabajo completo sin tocar el código.</li>
-        </ul>
+        <div>
+          <h3 style="margin-bottom:2px">Metodología · CRISP-DM</h3>
+          <div class="timeline">
+            <div class="phase"><span class="pn">01</span><span class="pt">Negocio</span><span class="pd">Problema, objetivos, criterios de éxito</span></div>
+            <div class="phase"><span class="pn">02</span><span class="pt">Datos</span><span class="pd">Nulos, atípicos, frecuencias, calidad</span></div>
+            <div class="phase"><span class="pn">03</span><span class="pt">Preparación</span><span class="pd">Limpieza, redundancia, estandarización</span></div>
+            <div class="phase"><span class="pn">04</span><span class="pt">Modelado</span><span class="pd">PCA, barrido de algoritmos y de k</span></div>
+            <div class="phase"><span class="pn">05</span><span class="pt">Evaluación</span><span class="pd">Estabilidad, contraste externo</span></div>
+            <div class="phase"><span class="pn">06</span><span class="pt">Interpretación</span><span class="pd">Perfilado de los grupos, dashboard</span></div>
+          </div>
+          <p style="font-size:12.5px;color:var(--faint);margin:14px 0 0">Python (<span class="mono">pandas</span>, <span class="mono">scikit-learn</span>, <span class="mono">matplotlib</span>), dashboard en <span class="mono">Streamlit</span>, y todos los parámetros en un solo archivo de configuración para que el análisis sea reproducible.</p>
+        </div>
       </div>
       <div class="chrome"><span data-name></span><span data-count></span></div>
       <div class="progress" data-progress></div>
@@ -360,8 +348,8 @@ a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-off
       <div class="eyebrow" data-eb></div>
       <h2 class="title">Valores nulos</h2>
       <div class="body-wrap">
-        <div class="cols" style="grid-template-columns:.9fr 1.1fr;align-items:start">
-          <table class="data" style="font-size:12.5px">
+        <div class="cols" style="grid-template-columns:.8fr 1.2fr;align-items:start;gap:26px">
+          <table class="data" style="font-size:12px">
             <thead><tr><th>Variable</th><th>Nulidad</th></tr></thead>
             <tbody>
               <tr><td class="mono">Lot.Number</td><td class="n">79 %</td></tr>
@@ -379,11 +367,17 @@ a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-off
             </tbody>
             <caption>El resto de columnas tiene menos del 1 % de nulos.</caption>
           </table>
-          <ul class="points tight">
-            <li>Se tomó como decisión <b>eliminar</b> las columnas cuya nulidad superaba un umbral alto, porque no había forma de completarlas de manera confiable.</li>
-            <li>Las variables que hacían parte del <b>perfilado</b> se conservaron, y sus valores faltantes se marcaron como <span class="mono">"Desconocido"</span> para no perder los lotes.</li>
-            <li>La <b>altitud no se imputó</b>: como no entra al clustering sino que solo describe los grupos, rellenarla con un promedio habría introducido un sesgo sin ningún beneficio.</li>
-          </ul>
+          <div>
+            <figure class="figframe" style="margin-bottom:14px">
+              <img class="fig" data-img="nulos_arabica" alt="Mapa de valores nulos del dataset de arábica" style="max-height:190px">
+              <figcaption>Mapa de valores nulos · cada franja es una columna, cada línea un lote</figcaption>
+            </figure>
+            <ul class="points tight">
+              <li>Se decidió <b>eliminar</b> las columnas cuya nulidad superaba un umbral alto, porque no había forma de completarlas de manera confiable.</li>
+              <li>Las variables de <b>perfilado</b> se conservaron, y sus faltantes se marcaron como <span class="mono">"Desconocido"</span> para no perder los lotes.</li>
+              <li>La <b>altitud no se imputó</b>: como solo describe los grupos y no entra al clustering, un promedio habría metido un sesgo sin beneficio.</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="chrome"><span data-name></span><span data-count></span></div>
@@ -445,22 +439,30 @@ a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-off
       <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
       <div class="eyebrow" data-eb></div>
       <h2 class="title">Qué se dejó por fuera del análisis</h2>
-      <div class="body-wrap">
-        <div class="reduce">
-          <div class="rbar" style="width:520px">
-            <div class="rseg keep2" style="width:23%">Catación 10</div>
-            <div class="rseg keep" style="width:5%">Ref.</div>
-            <div class="rseg keep" style="width:23%">Perfilado 10</div>
-            <div class="rseg drop" style="width:25%">Identificación 11</div>
-            <div class="rseg drop2" style="width:24%">Administrativas 12</div>
+      <div class="body-wrap" style="gap:14px">
+        <div class="cols" style="grid-template-columns:1fr 1fr;gap:20px;align-items:stretch">
+          <div style="background:var(--panel);border:1px solid var(--rule);border-top:3px solid var(--g-mid);padding:14px 16px">
+            <h3 style="color:var(--g-mid);margin-bottom:8px">Se conservaron · 21 columnas</h3>
+            <p class="klbl">Catación SCA · 10</p>
+            <p class="klist"><span class="mono">Aroma · Flavor · Aftertaste · Acidity · Body · Balance · Uniformity · Clean.Cup · Sweetness · Cupper.Points</span></p>
+            <p class="klbl">Referencia · 1</p>
+            <p class="klist"><span class="mono">Total.Cup.Points</span></p>
+            <p class="klbl">Perfilado de origen · 5</p>
+            <p class="klist"><span class="mono">Country.of.Origin · altitude_mean_meters · Variety · Processing.Method · Harvest.Year</span></p>
+            <p class="klbl">Perfilado físico · 5</p>
+            <p class="klist"><span class="mono">Color · Moisture · Category.One.Defects · Category.Two.Defects · Quakers</span></p>
           </div>
-          <span class="rarrow">→</span>
-          <span class="rtot">21 columnas<br>conservadas</span>
+          <div style="background:var(--panel);border:1px solid var(--rule);border-top:3px solid var(--g-low);padding:14px 16px">
+            <h3 style="color:var(--g-low);margin-bottom:8px">Se eliminaron · 23 columnas</h3>
+            <p class="klbl">Identificación y ubicación del lote · 11</p>
+            <p class="klist"><span class="mono">Lot.Number · Farm.Name · Mill · ICO.Number · Producer · Company · Owner · Owner.1 · Region · Altitude · Unnamed: 0</span></p>
+            <p class="klbl">Administrativas y redundantes · 12</p>
+            <p class="klist"><span class="mono">Species · altitude_low_meters · altitude_high_meters · Number.of.Bags · Bag.Weight · unit_of_measurement · In.Country.Partner · Grading.Date · Expiration · Certification.Body · Certification.Address · Certification.Contact</span></p>
+          </div>
         </div>
-        <ul class="points">
-          <li>Variables como <span class="mono">Lot.Number</span> o <span class="mono">Farm.Name</span> hacen parte de la identificación del lote y no describen el café en sí, así que se decidió no tenerlas en cuenta para el análisis.</li>
-          <li>Las columnas con una nulidad muy alta también se eliminaron, y de las tres columnas de altitud se conservó solo <span class="mono">altitude_mean_meters</span> como referencia de altura.</li>
-          <li>El dataset original venía en dos archivos: uno de café arábica y otro de café robusta. El de robusta usa un formulario de catación distinto, con atributos sensoriales que no existen en el arábica, y apenas contiene 28 registros. Se decidió trabajar solo con arábica para no inventar variables que no existían ni forzar equivalencias que no eran directas.</li>
+        <ul class="points tight" style="gap:6px">
+          <li>Las de identificación no describen el café; de las tres columnas de altitud se conservó solo <span class="mono">altitude_mean_meters</span>, y <span class="mono">Species</span> era constante (todo arábica).</li>
+          <li>Robusta se descartó por completo: usa otro formulario de catación, con atributos que no existen en arábica, y apenas tiene 28 registros.</li>
         </ul>
       </div>
       <div class="chrome"><span data-name></span><span data-count></span></div>
@@ -609,59 +611,12 @@ a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-off
       <div class="progress" data-progress></div>
     </section>
 
-    <!-- 15 · RESULTADOS · CONTRASTE EXTERNO -->
-    <section class="slide" data-eyebrow="Resultados · Contraste externo">
+    <!-- 15 · DASHBOARD (paso a la demo) -->
+    <section class="slide break" data-eyebrow="">
       <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
+      <svg class="branch" viewBox="0 0 120 360" aria-hidden="true"><use href="#branch-g"/></svg>
       <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
-      <div class="eyebrow" data-eb></div>
-      <h2 class="title">El modelo no repitió la frontera de los 80 puntos</h2>
-      <div class="body-wrap">
-        <div class="cols" style="grid-template-columns:1.05fr .95fr">
-          <div class="stat" style="background:var(--panel)">
-            <span class="v">0.177</span>
-            <span class="k">ARI · grupos frente al umbral de 80 puntos</span>
-            <span class="n">Es un valor bajo. El 86 % de los lotes ya supera los 80, porque la base solo reúne cafés que buscan certificación. Los grupos describen otra cosa: no volvieron a trazar la línea de la industria.</span>
-          </div>
-          <table class="data">
-            <thead><tr><th>Grupo</th><th>&lt; 80</th><th>≥ 80</th><th>% ≥ 80</th></tr></thead>
-            <tbody>
-              <tr><td><span class="gtag"><span class="gdot g0"></span>0</span></td><td class="n">24</td><td class="n">684</td><td class="n">96.6</td></tr>
-              <tr><td><span class="gtag"><span class="gdot g1"></span>1</span></td><td class="n em">154</td><td class="n">141</td><td class="n">47.8</td></tr>
-              <tr><td><span class="gtag"><span class="gdot g2"></span>2</span></td><td class="n">2</td><td class="n">305</td><td class="n">99.3</td></tr>
-            </tbody>
-            <caption>El grupo 1 reúne 154 de los 180 lotes que no alcanzan los 80 puntos.</caption>
-          </table>
-        </div>
-      </div>
-      <div class="chrome"><span data-name></span><span data-count></span></div>
-      <div class="progress" data-progress></div>
-    </section>
-
-    <!-- 16 · RESULTADOS · LOS TRES GRUPOS -->
-    <section class="slide" data-eyebrow="Resultados · Perfilado">
-      <svg class="hills" viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><use href="#hills-g"/></svg>
-      <svg class="bean" aria-hidden="true"><use href="#bean"/></svg>
-      <div class="eyebrow" data-eb></div>
-      <h2 class="title">Tres niveles de calidad, cada uno con su perfil</h2>
-      <div class="body-wrap">
-        <table class="data" style="font-size:13px">
-          <thead><tr><th>Grupo</th><th>n</th><th>Puntaje</th><th>% esp.</th><th>País principal</th><th>Altitud</th><th>Defectos leves</th></tr></thead>
-          <tbody>
-            <tr><td><span class="gtag"><span class="gdot g0"></span>Nivel medio · lavados · latinoamericanos</span></td><td class="n">708</td><td class="n">82.4</td><td class="n">96.6</td><td>Colombia (18 %)</td><td class="n">1.344 m</td><td class="n">3.09</td></tr>
-            <tr><td><span class="gtag"><span class="gdot g1"></span>Nivel bajo · fincas bajas · más defectos</span></td><td class="n">295</td><td class="n">78.9</td><td class="n">47.8</td><td>México (32 %)</td><td class="n">1.230 m</td><td class="n em">5.71</td></tr>
-            <tr><td><span class="gtag"><span class="gdot g2"></span>Nivel alto · fincas altas · orígenes variados</span></td><td class="n">307</td><td class="n">84.8</td><td class="n">99.3</td><td>Colombia · Etiopía · Kenia</td><td class="n">1.478 m</td><td class="n">2.72</td></tr>
-          </tbody>
-        </table>
-        <div>
-          <p class="subh">Lo que más los separa en términos controlables: los defectos leves por lote</p>
-          <div class="barset">
-            <div class="bar"><span class="bl"><span class="gtag"><span class="gdot g0"></span>Grupo 0</span></span><span class="bt"><span class="bf g0" style="width:54%"></span></span><span class="bv">3.09</span></div>
-            <div class="bar"><span class="bl"><span class="gtag"><span class="gdot g1"></span>Grupo 1</span></span><span class="bt"><span class="bf g1" style="width:100%"></span></span><span class="bv">5.71</span></div>
-            <div class="bar"><span class="bl"><span class="gtag"><span class="gdot g2"></span>Grupo 2</span></span><span class="bt"><span class="bf g2" style="width:48%"></span></span><span class="bv">2.72</span></div>
-          </div>
-          <p style="font-size:12px;color:var(--faint);margin:8px 0 0">La altitud se ordena con la calidad pero los rangos se solapan entre grupos; la variedad resultó poco concluyente.</p>
-        </div>
-      </div>
+      <div class="break-title">Veámoslo en el dashboard</div>
       <div class="chrome"><span data-name></span><span data-count></span></div>
       <div class="progress" data-progress></div>
     </section>
@@ -673,7 +628,7 @@ a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-off
       <div class="eyebrow" data-eb></div>
       <h2 class="title">Conclusiones y decisiones</h2>
       <div class="body-wrap">
-        <div class="concl">
+        <div class="concl" style="grid-template-columns:1fr 1fr">
           <div class="box">
             <h3>Qué aprendimos</h3>
             <p>Mirar solo la silueta habría llevado a elegir <b>2 grupos</b>; fueron las pruebas de <b>estabilidad</b> y el <b>contraste externo</b> los que sostuvieron la decisión de 3.</p>
@@ -684,12 +639,6 @@ a:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-off
             <p><b>Productor del nivel bajo:</b> priorizar la reducción de <b>defectos después de la cosecha</b> (secado, selección, almacenamiento), que es lo que más separa a los grupos y lo que sí se controla.</p>
             <p><b>Comprador:</b> segmentar oferta y precio dentro de la especialidad, donde hay dos niveles distinguibles.</p>
             <p><b>Planeación de finca:</b> altitud y origen como contexto de largo plazo.</p>
-          </div>
-          <div class="box">
-            <h3>Límites y qué sigue</h3>
-            <p>La muestra está <b>sesgada</b>: solo cafés que buscan certificación, y el 86 % ya pasa los 80 puntos.</p>
-            <p>Son <b>asociaciones, no causas</b>. Hay no-respuesta desigual en la altitud y el análisis es solo de arábica.</p>
-            <p>Queda pendiente <b>construir el dashboard</b> sobre el dataset ya exportado.</p>
           </div>
         </div>
         <p class="closingline">Este proyecto no buscaba predecir el puntaje de un café, porque esa referencia ya existe con el umbral de los 80 puntos. Lo que aporta es un mapa validado de la calidad del café de especialidad, con tres niveles bien diferenciados y estables, y una señal concreta: entre las condiciones que un productor sí puede cambiar, la que más distingue un nivel de otro es el control de defectos después de la cosecha, por encima de la altitud o la variedad.</p>
