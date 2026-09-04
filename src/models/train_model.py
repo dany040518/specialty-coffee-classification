@@ -2,6 +2,9 @@
 
 Funciones planas que reproducen lo que hace `notebooks/04_modelado.ipynb`:
 
+- `fit_pca`: ajusta un PCA con la semilla del proyecto y devuelve el
+  estimador (no solo la matriz transformada); lo usa `build_representations`
+  y también la fase 05, que necesita el objeto para serializarlo,
 - `build_representations`: arma las tres representaciones de la matriz de
   entrada que se comparan (los 7 atributos estandarizados y dos reducciones
   por PCA),
@@ -34,6 +37,19 @@ from sklearn.metrics import (
 from sklearn.mixture import GaussianMixture
 
 
+def fit_pca(matrix: np.ndarray, n_components: int, config: dict) -> PCA:
+    """Ajusta un PCA con la semilla del proyecto y devuelve el estimador ya
+    entrenado, no solo la matriz transformada.
+
+    Se expone aparte de `build_representations` porque la fase 05 necesita
+    serializar este mismo PCA (la fase 04 no lo guarda) para poder proyectar
+    lotes nuevos más adelante; con la semilla fija, ajustarlo de nuevo acá da
+    exactamente el mismo resultado.
+    """
+    seed = config["project"]["random_seed"]
+    return PCA(n_components=n_components, random_state=seed).fit(matrix)
+
+
 def build_representations(X: pd.DataFrame, config: dict) -> dict[str, np.ndarray]:
     """Devuelve las representaciones de la matriz de entrada que se comparan.
 
@@ -43,12 +59,11 @@ def build_representations(X: pd.DataFrame, config: dict) -> dict[str, np.ndarray
     Los nombres coinciden con `config -> clustering.pca.representations` y con
     los del notebook 04 (sección 4.5).
     """
-    seed = config["project"]["random_seed"]
     matrix = X.to_numpy()
     return {
         "7_atributos": matrix,
-        "pca_2": PCA(n_components=2, random_state=seed).fit_transform(matrix),
-        "pca_4": PCA(n_components=4, random_state=seed).fit_transform(matrix),
+        "pca_2": fit_pca(matrix, 2, config).transform(matrix),
+        "pca_4": fit_pca(matrix, 4, config).transform(matrix),
     }
 
 

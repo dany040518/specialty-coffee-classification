@@ -30,16 +30,10 @@ gráficas.
 import json
 from typing import Any
 
+import joblib
 import numpy as np
 import pandas as pd
-from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
-from sklearn.metrics import (
-    adjusted_rand_score,
-    calinski_harabasz_score,
-    davies_bouldin_score,
-    silhouette_score,
-)
+from sklearn.metrics import adjusted_rand_score
 
 from src.config import resolve_path
 from src.data.clean_data import clean_dataset
@@ -60,7 +54,13 @@ from src.models.interpret_model import (
     profile_numeric,
     profile_reporting,
 )
-from src.models.train_model import build_representations, fit_final_model, sweep
+from src.models.train_model import (
+    build_representations,
+    fit_final_model,
+    fit_pca,
+    fit_predict,
+    sweep,
+)
 
 
 def load_dataset(config: dict) -> pd.DataFrame:
@@ -142,21 +142,20 @@ def train_clustering(config: dict, save: bool = True) -> dict[str, Any]:
     model, matrix, labels = fit_final_model(representations, config)
 
     final = config["clustering"]["final"]
+    metrics = internal_metrics(matrix, labels)
     metadata = {
         "representacion": final["representation"],
         "algoritmo": final["algorithm"],
         "k": int(final["k"]),
         "random_seed": config["project"]["random_seed"],
         "n_lotes": int(len(labels)),
-        "silhouette": float(round(silhouette_score(matrix, labels), 4)),
-        "davies_bouldin": float(round(davies_bouldin_score(matrix, labels), 4)),
-        "calinski_harabasz": float(round(calinski_harabasz_score(matrix, labels), 1)),
+        "silhouette": float(metrics["silhouette"]),
+        "davies_bouldin": float(metrics["davies_bouldin"]),
+        "calinski_harabasz": float(metrics["calinski_harabasz"]),
         "tam_grupos": pd.Series(labels).value_counts().sort_index().to_dict(),
     }
 
     if save:
-        import joblib
-
         models_dir = resolve_path(config["paths"]["models_dir"])
         models_dir.mkdir(parents=True, exist_ok=True)
         tables_dir = resolve_path(config["paths"]["reports"]["tables_dir"])
@@ -201,7 +200,6 @@ def evaluate_clustering(config: dict, save: bool = True) -> dict[str, Any]:
     """
     seed = config["project"]["random_seed"]
     final = config["clustering"]["final"]
-    kmeans_params = config["clustering"]["algorithms"]["kmeans"]
     reference_column = config["validation"]["reference_column"]
     threshold = config["validation"]["specialty_threshold"]
     stability = config["validation"]["stability"]
@@ -213,11 +211,12 @@ def evaluate_clustering(config: dict, save: bool = True) -> dict[str, Any]:
 
     # El modelo final se ajustó sobre pca_2, pero la fase 04 solo guardó el
     # k-means: sin el PCA no se puede proyectar un lote nuevo (ver notebook 05, 5.3).
-    pca = PCA(n_components=2, random_state=seed)
-    matrix_pca2 = pca.fit_transform(X)
-    labels = KMeans(n_clusters=final["k"], random_state=seed, **kmeans_params).fit_predict(
-        matrix_pca2
-    )
+    # Se reconstruye con las mismas funciones de train_model.py que usó la fase 04
+    # (no con sklearn directo acá) para que el algoritmo elegido en
+    # `clustering.final` siga siendo el que de verdad se ajusta.
+    pca = fit_pca(X.to_numpy(), 2, config)
+    matrix_pca2 = pca.transform(X.to_numpy())
+    labels = fit_predict(final["algorithm"], final["k"], matrix_pca2, config)
     labels_saved = coffee["grupo"].to_numpy()
     reproducibility_ari = round(adjusted_rand_score(labels_saved, labels), 4)
 
@@ -255,9 +254,9 @@ def evaluate_clustering(config: dict, save: bool = True) -> dict[str, Any]:
     score_summary["pct_especialidad"] = (
         specialty.groupby(coffee["grupo"]).mean() * 100
     ).round(1)
-    labels_k2 = KMeans(
-        n_clusters=config["clustering"]["k_min"], random_state=seed, **kmeans_params
-    ).fit_predict(matrix_pca2)
+    labels_k2 = fit_predict(
+        final["algorithm"], config["clustering"]["k_min"], matrix_pca2, config
+    )
 
     evaluation = {
         "representacion": final["representation"],
@@ -302,8 +301,6 @@ def evaluate_clustering(config: dict, save: bool = True) -> dict[str, Any]:
     }
 
     if save:
-        import joblib
-
         models_dir.mkdir(parents=True, exist_ok=True)
         tables_dir = resolve_path(config["paths"]["reports"]["tables_dir"])
         tables_dir.mkdir(parents=True, exist_ok=True)

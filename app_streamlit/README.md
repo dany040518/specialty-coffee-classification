@@ -37,29 +37,23 @@ afectan a todas las secciones a la vez.
 
 ## Detalles de implementación
 
-- **Tema**: fondo crema, tarjetas blancas con sombra suave y tipografía Plus
-  Jakarta Sans (Google Fonts). Los colores base están en `.streamlit/config.toml`
-  y el resto en la hoja de estilos que inyecta `aplicar_estilos()`. Los tres
-  colores de grupo (azul, coral y verde azulado) se eligieron deliberadamente
-  fuera de la paleta café del resto de la interfaz, porque tres tonos de marrón
-  entre sí son casi indistinguibles en un gráfico; se validaron con el
-  validador de paletas del proyecto para separación perceptual, las tres formas
-  de daltonismo y contraste contra el fondo.
-- **Variables CSS en `style=""`**: Streamlit sanitiza el HTML que inyecta
-  `st.markdown` y borra cualquier propiedad `--nombre` de un atributo `style`
-  (aunque conserva las propiedades estándar del mismo atributo). El color de
-  cada tarjeta de grupo se fija con `border-top-color` y `background` directos,
-  no con `var(--tono)`, por esa razón.
-- **Círculo de correlaciones**: carga `models/clustering_pca.joblib` (el PCA de
-  2 componentes de la fase 05) y calcula `corr(atributo, dimensión) = autovector
-  × raíz del autovalor`, la misma fórmula del notebook 04. No depende de los
-  filtros de la barra lateral, porque el PCA no se reajusta con cada selección.
-  Como varios atributos quedan a menos de 0.15 uno de otro en Dim 2, la etiqueta
-  de texto se omite en los que no tienen separación real (se identifican con el
-  cursor); la nota debajo del gráfico dice cuáles, calculada en cada corrida.
-- **Mapa**: se dibuja con `plotly.graph_objects.Scattergeo`, que traza costas y
-  fronteras de forma vectorial. No pide tiles a ningún servidor, así que funciona
-  sin conexión y sin API key.
-- **Altitud**: 278 lotes no la reportan y la fase 03 decidió no imputarla. El
-  filtro los incluye por defecto y hay una casilla para excluirlos; sin ella, ese
-  21 % de la base desaparecería sin aviso.
+- **Tema**: fondo crema, tarjetas blancas y tipografía Plus Jakarta Sans
+  (Google Fonts) — colores base en `.streamlit/config.toml`, el resto en la
+  hoja de estilos de `aplicar_estilos()`. Los tres colores de grupo (azul,
+  coral, verde azulado) se validaron aparte de la paleta café: tres tonos de
+  marrón son casi indistinguibles entre sí en un gráfico.
+- **Colores de tarjeta vía `border-top-color`/`background`, no `var(--tono)`**:
+  Streamlit borra cualquier propiedad `--nombre` de un atributo `style` al
+  sanitizar el HTML de `st.markdown`, aunque conserve las propiedades
+  estándar del mismo atributo.
+- **Círculo de correlaciones**: carga el PCA de 2 componentes de la fase 05
+  (`models/clustering_pca.joblib`) y calcula `corr(atributo, dimensión) =
+  autovector × raíz del autovalor`, la fórmula del notebook 04. Fijo, no
+  depende de los filtros. Varios atributos quedan a menos de 0.15 uno de otro
+  en Dim 2; la etiqueta se omite donde no hay separación real (identificables
+  con el cursor), y una nota debajo dice cuáles.
+- **Mapa**: `plotly.graph_objects.Scattergeo`, vectorial — no pide tiles a
+  ningún servidor, funciona sin conexión y sin API key.
+- **Altitud**: 278 lotes no la reportan (la fase 03 decidió no imputarla). El
+  filtro los incluye por defecto, con una casilla para excluirlos — sin ella,
+  ese 21 % desaparecería sin aviso.
