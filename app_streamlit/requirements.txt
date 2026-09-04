@@ -1,0 +1,16 @@
+# Dependencias del dashboard. Son solo las que app.py importa: el mapa se dibuja
+# con plotly (scattergeo), así que ya no hacen falta folium ni streamlit-folium,
+# ni seaborn, matplotlib u openpyxl, que quedaron de una versión anterior.
+# scikit-learn y joblib sí son necesarios: el círculo de correlaciones carga
+# `models/clustering_pca.joblib`, y para des-serializar un objeto PCA hace
+# falta la clase, no solo joblib. La misma nota de `requirements.txt` en la
+# raíz del proyecto aplica acá: ese archivo se guardó desde un entorno con
+# scikit-learn 1.4.2, así que al cargarlo con otra versión aparece un aviso de
+# versión; el modelo carga igual.
+streamlit==1.28.1
+pandas==2.1.3
+numpy==1.24.3
+plotly==5.17.0
+scipy==1.11.4
+scikit-learn==1.4.2
+joblib==1.3.2
